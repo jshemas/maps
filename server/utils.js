@@ -41,6 +41,36 @@ module.exports = {
 	},
 
 	/*
+	 * validateCreatePlace is used in 'createPlace'
+	 */
+	validateCreatePlace: function(name, lat, long, callback) {
+		var nameRes = this.validateUsername(name);
+		var latRes = this.validateUsername(lat);
+		var longRes = this.validateUsername(long);
+		var errArr = [];
+		if(nameRes){errArr.push(nameRes);}
+		if(latRes){errArr.push(latRes);}
+		if(longRes){errArr.push(longRes);}
+		callback(errArr);
+	},
+
+	/*
+	 * validateEditPlace is used in 'editPlace'
+	 */
+	validateEditPlace: function(id, name, lat, long, callback) {
+		var idRes = this.validateId(id);
+		var nameRes = this.validateUsername(name);
+		var latRes = this.validateUsername(lat);
+		var longRes = this.validateUsername(long);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(nameRes){errArr.push(nameRes);}
+		if(latRes){errArr.push(latRes);}
+		if(longRes){errArr.push(longRes);}
+		callback(errArr);
+	},
+
+	/*
 	 * validateIDS is used in (all over)
 	 */
 	validateIDS: function(id, callback) {

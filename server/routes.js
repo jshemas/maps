@@ -2,6 +2,7 @@
 var _ = require('underscore'),
 	path = require('path'),
 	UserCtrl = require('./controllers/user'),
+	//PlaceCtrl = require('./controllers/place'),
 	userRoles = require('../client/app/scripts/routingConfig').userRoles,
 	accessLevels = require('../client/app/scripts/routingConfig').accessLevels;
 
@@ -53,6 +54,31 @@ var routes = [
 		middleware: [UserCtrl.deleteUser],
 		accessLevel: accessLevels.admin
 	},
+
+	// Places resource
+	// {
+	// 	path: '/addPlace',
+	// 	httpMethod: 'POST',
+	// 	middleware: [PlaceCtrl.createPlace],
+	// 	accessLevel: accessLevels.user
+	// },
+	// {
+	// 	path: '/getPlace',
+	// 	httpMethod: 'GET',
+	// 	middleware: [PlaceCtrl.getAllPlaces]
+	// },
+	// {
+	// 	path: '/editPlace',
+	// 	httpMethod: 'POST',
+	// 	middleware: [PlaceCtrl.editPlace],
+	// 	accessLevel: accessLevels.user
+	// },
+	// {
+	// 	path: '/deletePlace',
+	// 	httpMethod: 'POST',
+	// 	middleware: [PlaceCtrl.deletePlace],
+	// 	accessLevel: accessLevels.admin
+	// },
 
 	// All other get requests should be handled by AngularJS's client-side routing system
 	{

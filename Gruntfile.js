@@ -106,6 +106,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-karma');
 	// Tasks.
 	grunt.registerTask('default', ['jshint', 'mochaTest']);
+	grunt.registerTask('nolint', ['mochaTest']);
 	grunt.registerTask('server', ['express:dev', 'watch']);
 	grunt.registerTask('testserver','run backend tests', function () {
 		var tasks = ['jshint', 'mochaTest', 'watch'];
