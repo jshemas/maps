@@ -27,7 +27,7 @@ var User = mongoose.model('User', UserSchema);
 module.exports = {
 	addUser: function(username, password, email, role, userIP, callback) {
 		// first make sure the user doesn't all ready have an account
-		this.findByUsername(username, function(err,result) {
+		this.findByUsername(username, function(err, result) {
 			if(err){
 				callback(err,null);
 			}
@@ -113,12 +113,19 @@ module.exports = {
 			password: password,
 			email: email
 		}};
+		if(userBy !== userId){
+			callback(null, null);
+		}
 		User.update({_id:userId},userUpdate,{upsert: true}, function(err, result){
 			if(err){
 				winston.info('Error in editUser:'+err);
 				callback('DB-err-editUser',null);
 			} else {
-				callback(null, result);
+				if(result === 1){
+					callback(null, true);
+				} else {
+					callback(null, null);
+				}
 			}
 		});
 	},
@@ -129,7 +136,11 @@ module.exports = {
 				winston.info('Error in deleteUser:'+err);
 				callback('DB-err-deleteUser',null);
 			} else {
-				callback(null,result);
+				if(result === 1){
+					callback(null, true);
+				} else {
+					callback(null, null);
+				}
 			}
 		});
 	},

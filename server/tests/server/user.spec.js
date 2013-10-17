@@ -83,8 +83,6 @@ describe('User Test - ', function () {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			userId1 = result.body.id;
-			console.log("userId1:",userId1);
-			console.log("userId111:",result.body);
 			done();
 		});
 	});

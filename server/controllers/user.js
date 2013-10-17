@@ -58,7 +58,7 @@ module.exports = {
 					if(err){
 						return res.send(200, {'success': false, 'err': err});
 					}
-					if(result._id){
+					if(result === true){
 						return res.send(200, {'success': true, 'res': result});
 					} else {
 						return res.send(200, {'success': false, 'err': 'none'});
@@ -77,7 +77,7 @@ module.exports = {
 					if(err){
 						return res.send(200, {'success': false, 'err': err});
 					}
-					if(result._id){
+					if(result === true){
 						return res.send(200, {'success': true, 'res': result});
 					} else {
 						return res.send(200, {'success': false, 'err': 'none'});
