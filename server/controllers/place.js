@@ -48,7 +48,7 @@ module.exports = {
 		});
 	},
 
-	deleteCategory: function(req, res) {
+	deletePlace: function(req, res) {
 		utils.validateIDS(req.body.id, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});

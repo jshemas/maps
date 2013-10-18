@@ -7,11 +7,6 @@ var winston = require('winston'),
 	mongoose = require('mongoose'),
 	userRoles = require('../../client/app/scripts/routingConfig').userRoles;
 
-// should move this into app.js
-mongoose.connect('mongodb://localhost/something', function onMongooseError(err) {
-	if (err) { throw err; }
-});
-
 // User Schema
 var UserSchema = new mongoose.Schema({
 	username: { type: String },

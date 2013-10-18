@@ -2,11 +2,6 @@
 var winston = require('winston'),
 	mongoose = require('mongoose');
 
-// should move this into app.js
-mongoose.connect('mongodb://localhost/something', function onMongooseError(err) {
-	if (err) { throw err; }
-});
-
 var Comment = new mongoose.Schema({
 	author: { type: String, required: true },
 	body: { type: String, required: true }

@@ -1,9 +1,14 @@
 var express = require('express'),
 	http = require('http'),
 	passport = require('passport'),
+	mongoose = require('mongoose'),
 	User = require('./server/models/User.js');
 
 var app = module.exports = express();
+
+mongoose.connect('mongodb://localhost/something', function onMongooseError(err) {
+	if (err) { throw err; }
+});
 
 app.set('views', __dirname + '/client/app/views');
 app.set('view engine', 'jade');
