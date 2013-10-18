@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('playground', ['ngCookies']).config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
+angular.module('playground', ['ngCookies', 'leaflet-directive']).config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
 	var access = routingConfig.accessLevels;
 	$routeProvider.when('/', {
 		templateUrl: '/partials/home',
@@ -26,6 +26,11 @@ angular.module('playground', ['ngCookies']).config(['$routeProvider', '$location
 		templateUrl: '/partials/admin',
 		controller: 'AdminCtrl',
 		access: access.admin
+	});
+	$routeProvider.when('/mapTest', {
+		templateUrl: '/partials/mapTest',
+		controller: 'MapTestCtrl',
+		access: access.public
 	});
 	$routeProvider.when('/404', {
 		templateUrl: '/partials/404',

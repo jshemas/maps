@@ -99,4 +99,37 @@ angular.module('playground').controller('CategoryCtrl',['$rootScope', '$scope', 
 	});
 }]);
 
+angular.module('playground').controller('MapTestCtrl',['$rootScope', '$scope', function($rootScope, $scope) {
+	angular.extend($scope, {
+		london: {
+			lat: 51.505,
+			lng: -0.09,
+			zoom: 4
+		},
+		markers: {}
+	});
+	$scope.addMarkers = function() {
+		angular.extend($scope, {
+			markers: {
+				m1: {
+					lat: 51.505,
+					lng: -0.09,
+					message: "I'm a static marker",
+				},
+				m2: {
+					lat: 51,
+					lng: 0,
+					focus: true,
+					message: "Hey, drag me if you want",
+					draggable: true
+				}
+			}
+		});
+	};
+	$scope.removeMarkers = function() {
+		$scope.markers = {};
+	}
+	$scope.addMarkers();
+}]);
+
 

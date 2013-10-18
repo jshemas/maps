@@ -1,0 +1,9 @@
+h1 Center map example
+form
+  | Latitude :
+  input(type='number', step='any', ng-model='london.lat')
+  | Longitude :
+  input(type='number', step='any', ng-model='london.lng')
+  | Zoom :
+  input(type='number', step='any', ng-model='london.zoom')
+leaflet(center='london', markers="markers", width='640', height='400')
