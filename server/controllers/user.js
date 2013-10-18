@@ -20,7 +20,7 @@ module.exports = {
 						if(err) {
 							next(err);
 						} else {
-							res.json(200, { 'success': true, 'role': result.role, 'username': result.username, 'id': result.id });
+							res.json(200, { 'success': true, 'role': result.role[0], 'username': result.username, 'id': result.id });
 						}
 					});
 				});
@@ -44,7 +44,7 @@ module.exports = {
 				if(req.body.rememberme) {
 					req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 7;
 				}
-				res.json(200, { 'success': true, 'role': result.role, 'username': result.username });
+				res.json(200, { 'success': true, 'role': result.role[0], 'username': result.username });
 			});
 		})(req, res, next);
 	},

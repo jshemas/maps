@@ -1,7 +1,6 @@
 var app = require('../../../app'),
 	request = require('supertest'),
 	expect = require('expect.js'),
-	userRoles = require('../../../client/app/scripts/routingConfig').userRoles,
 	passportStub = require('passport-stub');
 passportStub.install(app);
 
@@ -14,20 +13,29 @@ passportStub.install(app);
 var user1 = {
 	'username':'userOne',
 	'email':'jimmy@jimmy.com',
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'password':'123456789'
 };
 
 var user2 = {
 	'username':'userTwo',
 	'email':'jimmy@jimmy.com',
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'password':'123456789'
 };
 
 var userWrongPassword = {
 	'username':'userOne',
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'email':'jimmy@jimmy.com',
 	'password':'123456789666'
 };
@@ -35,24 +43,36 @@ var userWrongPassword = {
 var userNoPassword = {
 	'username':'newUser',
 	'email':'jimmy@jimmy.com',
-	'role': userRoles.user
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 };
 
 var userNoName = {
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'email':'jimmy@jimmy.com',
 	'password':'123456789'
 };
 
 var userNoEmail = {
 	'username':'newUser',
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'password':'123456789'
 };
 
 var userBadEmail = {
 	'username':'newUser',
-	'role': userRoles.user,
+	'role': {
+		bitMask: 2,
+		title: 'user'
+	},
 	'email':'jimmyjimmy.com',
 	'password':'123456789'
 };
@@ -61,7 +81,10 @@ var userBadEmail = {
 var admin = {
 	'username':'admin',
 	'email':'admin@admin.com',
-	'role': userRoles.admin,
+	'role': {
+		bitMask: 4,
+		title: 'admin'
+	},
 	'id': '1',
 	'password':'superpassword'
 };

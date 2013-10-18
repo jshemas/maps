@@ -87,7 +87,7 @@ var routes = [
 		middleware: [function(req, res) {
 			var role = userRoles.public, username = '';
 			if(req.user) {
-				role = req.user.role;
+				role = req.user.role[0];
 				username = req.user.username;
 			}
 			res.cookie('user', JSON.stringify({
@@ -132,8 +132,15 @@ function ensureAuthorized(req, res, next) {
 	if(!req.user){
 		role = userRoles.public;
 	} else {
-		role = req.user.role;
+		//this is dumb
+		if(req.user.role[0]){
+			role = req.user.role[0];
+		} else {
+			//auto testing
+			role = req.user.role;
+		}
 	}
+
 	var accessLevel = _.findWhere(routes, { path: req.route.path }).accessLevel || accessLevels.public;
 	if(!(accessLevel.bitMask & role.bitMask)) {
 		return res.send(403);

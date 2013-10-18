@@ -4,15 +4,19 @@ var winston = require('winston'),
 	utils = require('../utils.js'),
 	encryptionHelper = require('encryptionhelper'),
 	encryptionKey = 'im-a-train-choo-choo',
-	mongoose = require('mongoose'),
-	userRoles = require('../../client/app/scripts/routingConfig').userRoles;
+	mongoose = require('mongoose');
+
+var Role = new mongoose.Schema({
+	bitMask: { type: Number, required: true },
+	title: { type: String, required: true }
+});
 
 // User Schema
 var UserSchema = new mongoose.Schema({
 	username: { type: String },
 	password:  { type: String },
 	email: { type: String },
-	userlevel: { type: String },
+	role: [Role],
 	userIP: { type: String },
 	createddate: { type: Date, default: Date.now }
 });
@@ -20,7 +24,7 @@ var UserSchema = new mongoose.Schema({
 var User = mongoose.model('User', UserSchema);
 
 module.exports = {
-	addUser: function(username, password, email, role, userIP, callback) {
+	addUser: function(username, password, email, role1, userIP, callback) {
 		// first make sure the user doesn't all ready have an account
 		this.findByUsername(username, function(err, result) {
 			if(err){
@@ -28,13 +32,17 @@ module.exports = {
 			}
 			if (!result) {
 				// all new user will be role level two meaning they are users
+				var role = {
+					bitMask: 2,
+					title: 'user'
+				};
 				var user = new User({
 					username: username,
 					password: password,
 					email: email,
-					userlevel: '2',
 					userIP: userIP
 				});
+				user.role.push(role);
 				user.save( function(err, result){
 					if(err){
 						winston.info('Error in addUser:'+err);
@@ -70,11 +78,6 @@ module.exports = {
 				callback('DB-err-findByID',null);
 			} else {
 				if(result) {
-					if(result.userlevel === '4') {
-						result.userlevel = userRoles.admin;
-					} else {
-						result.userlevel = userRoles.user;
-					}
 					callback(null, result);
 				} else {
 					callback(null, null);
@@ -90,11 +93,6 @@ module.exports = {
 				callback('DB-err-findByUsername',null);
 			} else {
 				if(result) {
-					if(result.userlevel === '4') {
-						result.userlevel = userRoles.admin;
-					} else {
-						result.userlevel = userRoles.user;
-					}
 					callback(null, result);
 				} else {
 					callback(null, null);
