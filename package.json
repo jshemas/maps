@@ -10,7 +10,7 @@
     "passport-local": "0.1.6",
     "underscore": "1.5.2",
     "validator": "1.5.1",
-    "mongoose": "3.6.11",
+    "mongoose": "3.6.20",
     "winston": "0.7.2",
     "passport-stub": "0.1.5",
     "encryptionhelper": "0.0.3"

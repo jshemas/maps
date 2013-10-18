@@ -5,7 +5,7 @@ var Place = require('../models/Place.js'),
 module.exports = {
 	createPlace: function(req, res) {
 		// need to update validion rules
-		utils.validateCreatePlace(req.body.name, req.body.lat, req.body.long, function(err) {
+		utils.validateCreatePlace(req.body.name, req.body.long, req.body.lat, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {
@@ -28,9 +28,19 @@ module.exports = {
 		});
 	},
 
+	getPlaceByLocation: function(req, res) {
+		// need to vailded this
+		Place.findPlaceByLocation(req.body.long, req.body.lat, req.body.maxDistance, function(err, result) {
+			if(err) {
+				return res.send(200, {'success': false, 'err': err});
+			}
+			res.json(200,{'success': true, 'res': result});
+		});
+	},
+
 	editPlace: function(req, res) {
 		// need to update validion rules
-		utils.validateEditPlace(req.body.id, req.body.name, req.body.lat, req.body.long, function(err) {
+		utils.validateEditPlace(req.body.id, req.body.name, req.body.long, req.body.lat, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {

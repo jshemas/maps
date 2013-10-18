@@ -68,6 +68,11 @@ var routes = [
 		middleware: [PlaceCtrl.getAllPlaces]
 	},
 	{
+		path: '/getPlaceByLocation',
+		httpMethod: 'GET',
+		middleware: [PlaceCtrl.getPlaceByLocation]
+	},
+	{
 		path: '/editPlace',
 		httpMethod: 'POST',
 		middleware: [PlaceCtrl.editPlace],

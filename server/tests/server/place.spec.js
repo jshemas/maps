@@ -40,8 +40,8 @@ var admin = {
 // places data
 var place = {
 	'name': 'cosi',
-	'lat': '56',
-	'long': '65'
+	'lat': 56,
+	'long': 65
 };
 
 // sample data
@@ -49,82 +49,89 @@ var place = {
 var sampleData1 = {
 	'name': 'Cosi',
 	'rateing': '6/10',
-	'lat': '39.959850',
-	'long': '-83.00716',
+	'lat': 39.959850,
+	'long': -83.00716,
 	'type': 'Museum'
 };
 
 var sampleData2 = {
 	'name': 'Easton Town Center',
 	'rateing': '8/10',
-	'lat': '40.0504',
-	'long': '-82.91541',
+	'lat': 40.0504,
+	'long': -82.91541,
 	'type': 'Mall'
 };
 
 var sampleData3 = {
 	'name': 'Columbus Museum of Art',
 	'rateing': '7/10',
-	'lat': '39.964343',
-	'long': '-82.987808',
+	'lat': 39.964343,
+	'long': -82.987808,
 	'type': 'Museum'
 };
 
 var sampleData4 = {
 	'name': 'Hollywood Casino',
 	'rateing': '7/10',
-	'lat': '39.948734',
-	'long': '-83.107165',
+	'lat': 39.948734,
+	'long': -83.107165,
 	'type': 'Gambeling'
 };
 
 var sampleData5 = {
 	'name': 'Field of Corn',
 	'rateing': '5/10',
-	'lat': '40.085049',
-	'long': '-83.123463',
+	'lat': 40.085049,
+	'long': -83.123463,
 	'type': 'Monument'
 };
 
 var sampleData6 = {
 	'name': 'Columbus Zoo',
 	'rateing': '8/10',
-	'lat': '40.156184',
-	'long': '-83.118338',
+	'lat': 40.156184,
+	'long': -83.118338,
 	'type': 'Zoo'
 };
 
 var sampleData7 = {
 	'name': 'Franklin Park Conservitory',
 	'rateing': '8/10',
-	'lat': '39.965992',
-	'long': '-82.953301',
+	'lat': 39.965992,
+	'long': -82.953301,
 	'type': 'Museum'
 };
 
 var sampleData8 = {
 	'name': 'Alum Creek Lake',
 	'rateing': '6/10',
-	'lat': '40.190699',
-	'long': '-82.971449',
+	'lat': 40.190699,
+	'long': -82.971449,
 	'type': 'Beach'
 };
 
 var sampleData9 = {
 	'name': 'Mirror Lake',
 	'rateing': '6/10',
-	'lat': '39.998044',
-	'long': '-83.014235',
+	'lat': 39.998044,
+	'long': -83.014235,
 	'type': 'Lake'
 };
 
 var sampleData10 = {
 	'name': 'Wexner Center for the Arts',
 	'rateing': '7/10',
-	'lat': '40.000422',
-	'long': '-83.008893',
+	'lat': 40.000422,
+	'long': -83.008893,
 	'type': 'Museum'
 };
+
+// for finding stuff
+var locData = {
+	'maxDistance': 2.33,
+	'lat': 39.959850,
+	'long': -83.00716
+}
 
 var userId1, userId2, placeId;
 
@@ -318,6 +325,14 @@ describe('Places Sample Test - ', function () {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			expect(result.body.res.length).to.be(10);
+			done();
+		});
+	});
+	it('Get some Locations', function(done) {
+		request(app).get('/getPlaceByLocation').send(locData).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			expect(result.body.res.length).to.be(6);
 			done();
 		});
 	});

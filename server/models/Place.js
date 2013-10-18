@@ -12,29 +12,24 @@ var PlaceSchema = new mongoose.Schema({
 	name: { type: String, required: true },
 	location: {
 		type: { type: String },
-		coordinates: []
+		coordinates: { type: [Number], index: '2dsphere' }
 	},
 	author: { type: String, required: false },
 	createdDate: { type: Date, default: Date.now },
 	comment: [Comment]
 });
 
-/*
-// make sure to have this index 
-// db.Places.create_index([('location', '2dsphere')])
-*/
-
 var Place = mongoose.model('Place', PlaceSchema);
 
 module.exports = {
-	addPlace: function(name, lat, long, author, callback) {
+	addPlace: function(name, long, lat, author, callback) {
 		var place = new Place({
 			name: name,
 			author: author
 		});
 		place.location.type = 'Point';
-		place.location.coordinates.push(lat);
 		place.location.coordinates.push(long);
+		place.location.coordinates.push(lat);
 		place.save( function(err, result){
 			if(err){
 				winston.info('Error in addPlace:'+err);
@@ -46,11 +41,12 @@ module.exports = {
 	},
 
 	/* http://emptysqua.re/blog/paging-geo-mongodb/ */
-	findPlaceByLocation: function(lat, long, callback) {
-		Place.find({geoNear: 'Places', near: {type: 'Point', coordinates: [lat, long]}, spherical: true, num: 10} , function(err,result) {
+	findPlaceByLocation: function(long, lat, maxDistance, callback) {
+		var point = { type: "Point", coordinates: [long,lat] };
+		Place.geoNear(point, { maxDistance: maxDistance, spherical: true }, function(err, result) {
 			if(err){
-				winston.info('Error in findPlaceById:'+err);
-				callback('DB-err-findPlaceById',null);
+				winston.info('Error in findPlaceByLocation:'+err);
+				callback('DB-err-findPlaceByLocation',null);
 			} else {
 				if(result) {
 					callback(null, result);
@@ -104,11 +100,10 @@ module.exports = {
 		});
 	},
 
-	editPlace: function(placeId, name, lat, long, editBy, callback) {
+	editPlace: function(placeId, name, long, lat, editBy, callback) {
+		// need to update long and lat
 		var placeUpdate = { $set: {
 			name: name,
-			lat: lat,
-			long: long
 		}};
 		Place.update({_id:placeId},placeUpdate,{upsert: true}, function(err, result){
 			if(err){
