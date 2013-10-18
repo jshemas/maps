@@ -10,12 +10,19 @@ var Comment = new mongoose.Schema({
 // Place Schema
 var PlaceSchema = new mongoose.Schema({
 	name: { type: String, required: true },
-	lat:  { type: String },
-	long: { type: String },
+	location: {
+		type: { type: String },
+		coordinates: []
+	},
 	author: { type: String, required: false },
 	createdDate: { type: Date, default: Date.now },
 	comment: [Comment]
 });
+
+/*
+// make sure to have this index 
+// db.Places.create_index([('location', '2dsphere')])
+*/
 
 var Place = mongoose.model('Place', PlaceSchema);
 
@@ -23,16 +30,33 @@ module.exports = {
 	addPlace: function(name, lat, long, author, callback) {
 		var place = new Place({
 			name: name,
-			lat: lat,
-			long: long,
 			author: author
 		});
+		place.location.type = 'Point';
+		place.location.coordinates.push(lat);
+		place.location.coordinates.push(long);
 		place.save( function(err, result){
 			if(err){
 				winston.info('Error in addPlace:'+err);
 				callback('DB-err-addPlace',null);
 			} else {
 				callback(null, result);
+			}
+		});
+	},
+
+	/* http://emptysqua.re/blog/paging-geo-mongodb/ */
+	findPlaceByLocation: function(lat, long, callback) {
+		Place.find({geoNear: 'Places', near: {type: 'Point', coordinates: [lat, long]}, spherical: true, num: 10} , function(err,result) {
+			if(err){
+				winston.info('Error in findPlaceById:'+err);
+				callback('DB-err-findPlaceById',null);
+			} else {
+				if(result) {
+					callback(null, result);
+				} else {
+					callback(null, null);
+				}
 			}
 		});
 	},

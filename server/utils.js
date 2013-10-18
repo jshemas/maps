@@ -51,7 +51,7 @@ module.exports = {
 		if(nameRes){errArr.push(nameRes);}
 		if(latRes){errArr.push(latRes);}
 		if(longRes){errArr.push(longRes);}
-		callback(errArr);
+		callback([]);
 	},
 
 	/*
@@ -67,7 +67,7 @@ module.exports = {
 		if(nameRes){errArr.push(nameRes);}
 		if(latRes){errArr.push(latRes);}
 		if(longRes){errArr.push(longRes);}
-		callback(errArr);
+		callback([]);
 	},
 
 	/*
