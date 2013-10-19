@@ -52,18 +52,18 @@ angular.module('playground').factory('Users', function($http) {
 	};
 });
 
-angular.module('playground').factory('Category', function($http) {
+angular.module('playground').factory('Place', function($http) {
 	return {
-		createCategory: function(cat, success, error) {
-			$http.post('/addCategory', cat).success(function(res) {
+		createPlace: function(place, success, error) {
+			$http.post('/addPlace', place).success(function(res) {
 				success();
 			}).error(error);
 		},
-		getAllCategory: function(success, error) {
-			$http.get('/getCategory').success(success).error(error);
+		getAllPlaces: function(success, error) {
+			$http.get('/getAllPlace').success(success).error(error);
 		},
-		deleteCategory: function(cat, success, error) {
-			$http.post('/deleteCategory', cat).success(function(res) {
+		deletePlaces: function(place, success, error) {
+			$http.post('/deletePlaces', place).success(function(res) {
 				success();
 			}).error(error);
 		}

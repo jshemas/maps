@@ -9,7 +9,8 @@ module.exports = {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {
-				Place.addPlace(req.body.name, req.body.lat, req.body.long, req.user.id, function(err, result) {
+				// need to pass real user ID
+				Place.addPlace(req.body.name, req.body.lat, req.body.long, '456', function(err, result) {
 					if(err) {
 						return res.send(200, {'success': false, 'err': err});
 					}

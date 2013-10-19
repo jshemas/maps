@@ -60,10 +60,9 @@ var routes = [
 		path: '/addPlace',
 		httpMethod: 'POST',
 		middleware: [PlaceCtrl.createPlace],
-		accessLevel: accessLevels.user
 	},
 	{
-		path: '/getPlace',
+		path: '/getAllPlace',
 		httpMethod: 'GET',
 		middleware: [PlaceCtrl.getAllPlaces]
 	},

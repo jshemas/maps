@@ -76,13 +76,14 @@ angular.module('playground').controller('AdminCtrl',['$rootScope', '$scope', 'Us
 	});
 }]);
 
-angular.module('playground').controller('CategoryCtrl',['$rootScope', '$scope', '$location', 'Category', 'Auth', function($rootScope, $scope, $location, Category, Auth) {
+angular.module('playground').controller('PlaceCtrl',['$rootScope', '$scope', '$location', 'Place', 'Auth', function($rootScope, $scope, $location, Place, Auth) {
 	$scope.loading = true;
 	$scope.userRoles = Auth.userRoles;
-	$scope.addCat = function() {
-		Category.createCategory({
+	$scope.addPlace = function() {
+		Place.createPlace({
 			name: $scope.name,
-			description: $scope.description
+			long: $scope.long,
+			lat: $scope.lat
 		}, function() {
 			//for some reason I can't go back to this page
 			$location.path('/');
@@ -90,11 +91,50 @@ angular.module('playground').controller('CategoryCtrl',['$rootScope', '$scope', 
 			$rootScope.error = err;
 		});
 	};
-	Category.getAllCategory(function(res) {
-		$scope.categories = res.categories;
+	Place.getAllPlaces(function(res) {
+		$scope.places = res.res;
 		$scope.loading = false;
 	}, function(err) {
-		$rootScope.error = "Failed to fetch categories.";
+		$rootScope.error = "Failed to fetch places.";
+		$scope.loading = false;
+	});
+}]);
+
+angular.module('playground').controller('PlaceMapCtrl',['$rootScope', '$scope', '$location', 'Place', 'Auth', function($rootScope, $scope, $location, Place, Auth) {
+	$scope.loading = true;
+	$scope.userRoles = Auth.userRoles;
+	angular.extend($scope, {
+		columbus: {
+			lat: 39.959850,
+			lng: -83.00716,
+			zoom: 11
+		},
+		markers: {}
+	});
+	Place.getAllPlaces(function(res) {
+		$scope.places = res.res;
+		$scope.loading = false;
+
+		var markersContents = {};
+		for (var i = 0; i <= res.res.length-1; i++) {
+			var placement = 'm'+(i+1),
+				contents = {
+					lat: res.res[i].location.coordinates[0],
+					lng: res.res[i].location.coordinates[1],
+					message: res.res[i].name
+				};
+			markersContents[placement]= contents;
+		};
+
+		$scope.addMarkers = function() {
+			angular.extend($scope, {
+				markers: markersContents
+			});
+		};
+
+		$scope.addMarkers();
+	}, function(err) {
+		$rootScope.error = "Failed to fetch places.";
 		$scope.loading = false;
 	});
 }]);

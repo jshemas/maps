@@ -36,9 +36,14 @@ angular.module('playground', ['ngCookies', 'leaflet-directive']).config(['$route
 		templateUrl: '/partials/404',
 		access: access.public
 	});
-	$routeProvider.when('/category', {
-		templateUrl: '/partials/category',
-		controller: 'CategoryCtrl',
+	$routeProvider.when('/place', {
+		templateUrl: '/partials/place',
+		controller: 'PlaceCtrl',
+		access: access.public
+	});
+	$routeProvider.when('/placeMap', {
+		templateUrl: '/partials/placeMap',
+		controller: 'PlaceMapCtrl',
 		access: access.public
 	});
 	$routeProvider.otherwise({redirectTo:'/404'});

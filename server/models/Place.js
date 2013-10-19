@@ -59,7 +59,6 @@ module.exports = {
 
 	findAllPlaces: function(callback) {
 		var query = Place.find().sort('-createddate');
-		query.select('name lat long author _id');
 		query.exec(function (err, result) {
 			if(err){
 				winston.info('Error in findAllPlaces:'+err);
