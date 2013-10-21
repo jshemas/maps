@@ -1,4 +1,12 @@
 'use strict';
+
+/*
+ * needs work on
+ * -validatePlaceCord
+ * -validateRateContent
+*/
+
+
 module.exports = {
 	/*
 	 * validateRegister is used in 'register'
@@ -79,6 +87,58 @@ module.exports = {
 	},
 
 	/*
+	 * validateAddComment is used in 'addComment'
+	 */
+	validateAddComment: function(id, content, callback) {
+		var idRes = this.validateId(id);
+		var contentRes = this.validateCommentContent(content);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(contentRes){errArr.push(contentRes);}
+		callback(errArr);
+	},
+
+	/*
+	 * validateEditComment is used in 'editComment'
+	 */
+	validateEditComment: function(content, id, id2, callback) {
+		var idRes = this.validateId(id);
+		var contentRes = this.validateCommentContent(content);
+		var idRes2 = this.validateId(id2);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(contentRes){errArr.push(contentRes);}
+		if(idRes2){errArr.push(idRes2);}
+		callback(errArr);
+	},
+
+	/*
+	 * validateAddRate is used in 'addRate'
+	 */
+	validateAddRate: function(id, content, callback) {
+		var idRes = this.validateId(id);
+		var contentRes = this.validateRateContent(content);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(contentRes){errArr.push(contentRes);}
+		callback(errArr);
+	},
+
+	/*
+	 * validateEditRate is used in 'editRate'
+	 */
+	validateEditRate: function(content, id, id2, callback) {
+		var idRes = this.validateId(id);
+		var contentRes = this.validateRateContent(content);
+		var idRes2 = this.validateId(id2);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(contentRes){errArr.push(contentRes);}
+		if(idRes2){errArr.push(idRes2);}
+		callback(errArr);
+	},
+
+	/*
 	 * validateIDS is used in (all over)
 	 */
 	validateIDS: function(id, callback) {
@@ -88,6 +148,17 @@ module.exports = {
 		callback(errArr);
 	},
 
+	/*
+	 * validateIDS2 is used in (all over)
+	 */
+	validateIDS2: function(id, id2, callback) {
+		var idRes = this.validateId(id);
+		var idRes2 = this.validateId(id2);
+		var errArr = [];
+		if(idRes){errArr.push(idRes);}
+		if(idRes2){errArr.push(idRes2);}
+		callback(errArr);
+	},
 	/*
 	 * validate var
 	 * @param string var - user input
@@ -257,6 +328,47 @@ module.exports = {
 			}
 		} else {
 			return 'Invalid Category';
+		}
+	},
+
+	/**
+	 * validate places comment content
+	 * @param string content - user input: content
+	 */
+	validateCommentContent: function(content) {
+		//word characters such as 0-9, A-Z, a-z, _
+		//literal period
+		//literal @
+		// space
+		//between 6 and 40 characters long
+		if(this.validateVar(content)){
+			var regex = /^[\w\.@ ]{6,40}$/;
+			if(regex.test(content)){
+				return;
+			} else {
+				return 'Invalid Comment';
+			}
+		} else {
+			return 'Invalid Comment';
+		}
+	},
+
+	/**
+	 * validate places rate content
+	 * @param number rate - user input: rate
+	 */
+	validateRateContent: function(rate) {
+		// should add more valideion on this
+		// is this a number?
+		if(this.validateVar(rate)){
+			var regex = /(\d+)/;
+			if(regex.test(rate)){
+				return;
+			} else {
+				return 'Invalid Rate';
+			}
+		} else {
+			return 'Invalid Rate';
 		}
 	},
 

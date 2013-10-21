@@ -96,32 +96,41 @@ module.exports = {
 	},
 
 	addComment: function(req, res) {
-		// need to vailded this
-		Place.addComment(req.body.id, req.user.id, req.body.content, function(err, result) {
-			if(err) {
+		utils.validateAddComment(req.body.id, req.body.content, function(err) {
+			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
+			} else {
+				Place.addComment(req.body.id, req.user.id, req.body.content, function(err, result) {
+					if(err) {
+						return res.send(200, {'success': false, 'err': err});
+					}
+					res.json(200,{'success': true, 'res': result});
+				});
 			}
-			res.json(200,{'success': true, 'res': result});
 		});
 	},
 
 	editComment: function(req, res) {
-		// need to vailded this
-		Place.editComment(req.user.id, req.body.content, req.body.commentId, req.body.placeId, function(err, result) {
-			if(err){
+		utils.validateEditComment(req.body.content, req.body.commentId, req.body.placeId, function(err) {
+			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
-			}
-			if(result === true){
-				return res.send(200, {'success': true, 'res': result});
 			} else {
-				return res.send(200, {'success': false, 'err': 'none'});
+				Place.editComment(req.user.id, req.body.content, req.body.commentId, req.body.placeId, function(err, result) {
+					if(err){
+						return res.send(200, {'success': false, 'err': err});
+					}
+					if(result === true){
+						return res.send(200, {'success': true, 'res': result});
+					} else {
+						return res.send(200, {'success': false, 'err': 'none'});
+					}
+				});
 			}
 		});
 	},
 
 	deleteComment: function(req, res) {
-		// need more vaild for placeId
-		utils.validateIDS(req.body.commentId, function(err) {
+		utils.validateIDS2(req.body.commentId, req.body.placeId, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {
@@ -140,32 +149,41 @@ module.exports = {
 	},
 
 	addRate: function(req, res) {
-		// need to vailded this
-		Place.addRate(req.body.id, req.user.id, req.body.content, function(err, result) {
-			if(err) {
+		utils.validateAddRate(req.body.id, req.body.content, function(err) {
+			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
+			} else {
+				Place.addRate(req.body.id, req.user.id, req.body.content, function(err, result) {
+					if(err) {
+						return res.send(200, {'success': false, 'err': err});
+					}
+					res.json(200,{'success': true, 'res': result});
+				});
 			}
-			res.json(200,{'success': true, 'res': result});
 		});
 	},
 
 	editRate: function(req, res) {
-		// need to vailded this
-		Place.editRate(req.user.id, req.body.content, req.body.rateId, req.body.placeId, function(err, result) {
-			if(err){
+		utils.validateEditRate(req.body.content, req.body.rateId, req.body.placeId, function(err) {
+			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
-			}
-			if(result === true){
-				return res.send(200, {'success': true, 'res': result});
 			} else {
-				return res.send(200, {'success': false, 'err': 'none'});
+				Place.editRate(req.user.id, req.body.content, req.body.rateId, req.body.placeId, function(err, result) {
+					if(err){
+						return res.send(200, {'success': false, 'err': err});
+					}
+					if(result === true){
+						return res.send(200, {'success': true, 'res': result});
+					} else {
+						return res.send(200, {'success': false, 'err': 'none'});
+					}
+				});
 			}
 		});
 	},
 
 	deleteRate: function(req, res) {
-		// need to vailded placeId
-		utils.validateIDS(req.body.rateId, function(err) {
+		utils.validateIDS2(req.body.rateId, req.body.placeId, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {
