@@ -4,27 +4,54 @@ var winston = require('winston'),
 
 var Comment = new mongoose.Schema({
 	author: { type: String, required: true },
-	body: { type: String, required: true }
+	createdDate: { type: Date, default: Date.now },
+	editDate: { type: Date },
+	content: { type: String, required: true }
+});
+
+var Rates = new mongoose.Schema({
+	author: { type: String, required: true },
+	createdDate: { type: Date, default: Date.now },
+	editDate: { type: Date },
+	rate: { type: Number, required: true }
 });
 
 // Place Schema
 var PlaceSchema = new mongoose.Schema({
 	name: { type: String, required: true },
+	description: { type: String, required: true },
 	location: {
-		type: { type: String },
-		coordinates: { type: [Number], index: '2dsphere' }
+		type: { type: String, required: true },
+		coordinates: { type: [Number], index: '2dsphere', required: true }
 	},
-	author: { type: String, required: false },
+	totalRating: { type: String },
+	rates: [Rates],
+	category:  { type: String, required: true },
+	author: { type: String, required: true },
 	createdDate: { type: Date, default: Date.now },
-	comment: [Comment]
+	comment: [Comment],
+	pictures: { type: [String] },
+	tags: { type: [String] },
+	website: { type: String },
+	hours: {
+		sunday: { type: String },
+		monday: { type: String },
+		tuesday: { type: String },
+		wednesday: { type: String },
+		thursday: { type: String },
+		friday: { type: String },
+		saturday: { type: String },
+	}
 });
 
 var Place = mongoose.model('Place', PlaceSchema);
 
 module.exports = {
-	addPlace: function(name, long, lat, author, callback) {
+	addPlace: function(name, long, lat, author, description, category, callback) {
 		var place = new Place({
 			name: name,
+			category: category,
+			description: description,
 			author: author
 		});
 		place.location.type = 'Point';
@@ -99,10 +126,12 @@ module.exports = {
 		});
 	},
 
-	editPlace: function(placeId, name, long, lat, editBy, callback) {
+	editPlace: function(placeId, name, long, lat, editBy, description, category, callback) {
 		// need to update long and lat
 		var placeUpdate = { $set: {
 			name: name,
+			category: category,
+			description: description
 		}};
 		Place.update({_id:placeId},placeUpdate,{upsert: true}, function(err, result){
 			if(err){
