@@ -29,6 +29,7 @@ var PlaceSchema = new mongoose.Schema({
 	category:  { type: String, required: true },
 	author: { type: String, required: true },
 	createdDate: { type: Date, default: Date.now },
+	editDate: { type: Date },
 	comment: [Comment],
 	pictures: { type: [String] },
 	tags: { type: [String] },
@@ -138,11 +139,15 @@ module.exports = {
 	},
 
 	editPlace: function(placeId, name, long, lat, editBy, description, category, callback) {
-		// need to update long and lat
 		var placeUpdate = { $set: {
 			name: name,
 			category: category,
-			description: description
+			description: description,
+			editDate: new Date().toISOString(),
+			location: {
+				type: 'Point',
+				coordinates: [ long, lat ]
+			}
 		}};
 		Place.update({_id:placeId},placeUpdate,{upsert: true}, function(err, result){
 			if(err){
