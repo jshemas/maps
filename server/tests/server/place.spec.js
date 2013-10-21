@@ -299,10 +299,10 @@ describe('Places Test - ', function () {
 			done();
 		});
 	});
-	it('Delete that new place', function(done) {
-		var data = {'placeId':placeId,'commentId':commentId};
+	it('Delete that new Rate', function(done) {
+		var data = {'placeId':placeId,'rateId':rateId};
 		passportStub.login(admin); // login as admin
-		request(app).post('/deleteComment').send(data).expect(200, done);
+		request(app).post('/deleteRate').send(data).expect(200, done);
 	});
 	it('Delete that new place', function(done) {
 		var data = {'id':placeId};

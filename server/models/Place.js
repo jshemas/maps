@@ -175,8 +175,10 @@ module.exports = {
 						winston.info('Error in addComment:'+err);
 						callback(err, null);
 					} else {
-						// is res = 1 ?
-						callback(null, result);
+						if(result._id) {
+							callback(null, result);
+						}
+						callback(null, null);
 					}
 				});
 			} else {
@@ -187,11 +189,10 @@ module.exports = {
 
 	editComment: function(author, content, commentId, placeId, callback){
 		// only author + admin can edit
-		// should make sure this doesn't over the ori data
-		// need to update data
 		var commentUpdate = { $set: {
 			'comment.$.content': content,
-			'comment.$.author': author
+			'comment.$.author': author,
+			'comment.$.editDate': new Date().toISOString()
 		}};
 		Place.update({_id:placeId, 'comment._id':commentId},commentUpdate,{upsert: true}, function(err, result){
 			if(err){
@@ -216,7 +217,11 @@ module.exports = {
 				winston.info('Error in deleteComment:'+err);
 				callback(err, null);
 			} else {
-				callback(null, result);
+				if(result === 1){
+					callback(null, true);
+				} else {
+					callback(null, null);
+				}
 			}
 		});
 	},
@@ -240,8 +245,10 @@ module.exports = {
 						winston.info('Error in addRate:'+err);
 						callback(err, null);
 					} else {
-						// is res = 1 ?
-						callback(null, result);
+						if(result._id) {
+							callback(null, result);
+						}
+						callback(null, null);
 					}
 				});
 			} else {
@@ -251,21 +258,30 @@ module.exports = {
 	},
 
 	editRate: function(author, rateContent, rateId, placeId, callback){
-		// need to re cal the total rateing
-		// should make sure this doesn't over the ori data
-		// need to update data
 		// only user who made this should edit it
 		var rateUpdate = { $set: {
 			'rate.$.rate': rateContent,
-			'rate.$.author': author
+			'rate.$.author': author,
+			'rate.$.editDate': new Date().toISOString()
 		}};
+		var that = this;
 		Place.update({_id:placeId, 'rate._id':rateId},rateUpdate,{upsert: true}, function(err, result){
 			if(err){
 				winston.info('Error in editRate:'+err);
 				callback(err, null);
 			} else {
 				if(result === 1){
-					callback(null, true);
+					that.updateTotalOverAllRating(placeId, function(err, result) {
+						if(err){
+							winston.info('Error in editRate2:'+err);
+							callback(err, null);
+						} else {
+							if(result == 1) {
+								callback(null, true);
+							}
+							callback(null, null);
+						}
+					});
 				} else {
 					callback(null, null);
 				}
@@ -274,16 +290,58 @@ module.exports = {
 	},
 
 	deleteRate: function(rateId, placeId, callback){
-		// need to re cal the total rateing
 		var rateUpdate = { $pull: {
 			rate:{_id:rateId}
 		}};
+		var that = this;
 		Place.update({_id:placeId},rateUpdate, function(err, result){
 			if(err){
 				winston.info('Error in deleteRate:'+err);
 				callback(err, null);
 			} else {
-				callback(null, result);
+				if(result === 1){
+					that.updateTotalOverAllRating(placeId, function(err, result) {
+						if(err){
+							winston.info('Error in deleteRate2:'+err);
+							callback(err, null);
+						} else {
+							if(result == 1) {
+								callback(null, true);
+							}
+							callback(null, null);
+						}
+					});
+				} else {
+					callback(null, null);
+				}
+			}
+		});
+	},
+
+	updateTotalOverAllRating: function(placeId, callback) {
+		this.findPlaceById(placeId, function(err, place) {
+			if(place._id){
+				var totalOverAllRating = 0;
+				for (var i = 0; i < place.rate.length; i++) {
+					totalOverAllRating = totalOverAllRating + place.rate[i].content;
+				}
+				if(totalOverAllRating > 0) {
+					totalOverAllRating = (totalOverAllRating / place.rate.length);
+				};
+				place.totalOverAllRating = totalOverAllRating;
+				place.save( function(err, result){
+					if(err){
+						winston.info('Error in updateTotalOverAllRating:'+err);
+						callback(err, null);
+					} else {
+						if(result._id) {
+							callback(null, true);
+						}
+						callback(null, null);
+					}
+				});
+			} else {
+				callback(null, null);
 			}
 		});
 	}
