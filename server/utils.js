@@ -4,6 +4,7 @@
  * needs work on
  * -validatePlaceCord
  * -validateRateContent
+ * -validateMaxDistance
 */
 
 
@@ -83,6 +84,20 @@ module.exports = {
 		if(longRes){errArr.push(longRes);}
 		if(descriptionRes){errArr.push(descriptionRes);}
 		if(categoryRes){errArr.push(categoryRes);}
+		callback(errArr);
+	},
+
+	/*
+	 * validateGetPlaceByLocation is used in 'getPlaceByLocation'
+	 */
+	validateGetPlaceByLocation: function(long, lat, maxDistance, callback) {
+		var maxDistanceRes = this.validateMaxDistance(maxDistance);
+		var latRes = this.validatePlaceCord(lat);
+		var longRes = this.validatePlaceCord(long);
+		var errArr = [];
+		if(maxDistanceRes){errArr.push(maxDistanceRes);}
+		if(latRes){errArr.push(latRes);}
+		if(longRes){errArr.push(longRes);}
 		callback(errArr);
 	},
 
@@ -328,6 +343,25 @@ module.exports = {
 			}
 		} else {
 			return 'Invalid Category';
+		}
+	},
+
+	/**
+	 * validate maxDistance
+	 * @param number maxDistance - user input: maxDistance
+	 */
+	validateMaxDistance: function(maxDistance) {
+		// should add more valideion on this
+		// is this a number?
+		if(this.validateVar(maxDistance)){
+			var regex = /(\d+)/;
+			if(regex.test(maxDistance)){
+				return;
+			} else {
+				return 'Invalid Max Distance';
+			}
+		} else {
+			return 'Invalid Max Distance';
 		}
 	},
 

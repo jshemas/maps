@@ -29,12 +29,17 @@ module.exports = {
 	},
 
 	getPlaceByLocation: function(req, res) {
-		// need to vailded this
-		Place.findPlaceByLocation(req.body.long, req.body.lat, req.body.maxDistance, function(err, result) {
-			if(err) {
+		utils.validateGetPlaceByLocation(req.body.long, req.body.lat, req.body.maxDistance, function(err) {
+			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
+			} else {
+				Place.findPlaceByLocation(req.body.long, req.body.lat, req.body.maxDistance, function(err, result) {
+					if(err) {
+						return res.send(200, {'success': false, 'err': err});
+					}
+					res.json(200,{'success': true, 'res': result});
+				});
 			}
-			res.json(200,{'success': true, 'res': result});
 		});
 	},
 
