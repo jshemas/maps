@@ -9,11 +9,11 @@ var Comment = new mongoose.Schema({
 	content: { type: String, required: true }
 });
 
-var Rates = new mongoose.Schema({
+var Rate = new mongoose.Schema({
 	author: { type: String, required: true },
 	createdDate: { type: Date, default: Date.now },
 	editDate: { type: Date },
-	rate: { type: Number, required: true }
+	content: { type: Number, required: true }
 });
 
 // Place Schema
@@ -24,8 +24,8 @@ var PlaceSchema = new mongoose.Schema({
 		type: { type: String, required: true },
 		coordinates: { type: [Number], index: '2dsphere', required: true }
 	},
-	totalRating: { type: String },
-	rates: [Rates],
+	totalOverAllRating: { type: Number },
+	rate: [Rate],
 	category:  { type: String, required: true },
 	author: { type: String, required: true },
 	createdDate: { type: Date, default: Date.now },
@@ -161,4 +161,130 @@ module.exports = {
 			}
 		});
 	},
+
+	addComment: function(placeId, addBy, content, callback) {
+		this.findPlaceById(placeId, function(err, place) {
+			var comment = {
+				author: addBy,
+				content: content
+			};
+			if(place._id){
+				place.comment.push(comment);
+				place.save( function(err, result){
+					if(err){
+						winston.info('Error in addComment:'+err);
+						callback(err, null);
+					} else {
+						// is res = 1 ?
+						callback(null, result);
+					}
+				});
+			} else {
+				callback(null, null);
+			}
+		});
+	},
+
+	editComment: function(author, content, commentId, placeId, callback){
+		// only author + admin can edit
+		// should make sure this doesn't over the ori data
+		// need to update data
+		var commentUpdate = { $set: {
+			'comment.$.content': content,
+			'comment.$.author': author
+		}};
+		Place.update({_id:placeId, 'comment._id':commentId},commentUpdate,{upsert: true}, function(err, result){
+			if(err){
+				winston.info('Error in editComment:'+err);
+				callback(err, null);
+			} else {
+				if(result === 1){
+					callback(null, true);
+				} else {
+					callback(null, null);
+				}
+			}
+		});
+	},
+
+	deleteComment: function(commentId, placeId, callback){
+		var commentUpdate = { $pull: {
+			comment:{_id:commentId}
+		}};
+		Place.update({_id:placeId},commentUpdate, function(err, result){
+			if(err){
+				winston.info('Error in deleteComment:'+err);
+				callback(err, null);
+			} else {
+				callback(null, result);
+			}
+		});
+	},
+
+	addRate: function(placeId, addBy, rateContent, callback) {
+		this.findPlaceById(placeId, function(err, place) {
+			var rate = {
+				author: addBy,
+				content: rateContent
+			};
+			if(place._id){
+				place.rate.push(rate);
+				var totalOverAllRating = 0;
+				for (var i = 0; i < place.rate.length; i++) {
+					totalOverAllRating = totalOverAllRating + place.rate[i].content;
+				}
+				totalOverAllRating = (totalOverAllRating / place.rate.length);
+				place.totalOverAllRating = totalOverAllRating;
+				place.save( function(err, result){
+					if(err){
+						winston.info('Error in addRate:'+err);
+						callback(err, null);
+					} else {
+						// is res = 1 ?
+						callback(null, result);
+					}
+				});
+			} else {
+				callback(null, null);
+			}
+		});
+	},
+
+	editRate: function(author, rateContent, rateId, placeId, callback){
+		// need to re cal the total rateing
+		// should make sure this doesn't over the ori data
+		// need to update data
+		// only user who made this should edit it
+		var rateUpdate = { $set: {
+			'rate.$.rate': rateContent,
+			'rate.$.author': author
+		}};
+		Place.update({_id:placeId, 'rate._id':rateId},rateUpdate,{upsert: true}, function(err, result){
+			if(err){
+				winston.info('Error in editRate:'+err);
+				callback(err, null);
+			} else {
+				if(result === 1){
+					callback(null, true);
+				} else {
+					callback(null, null);
+				}
+			}
+		});
+	},
+
+	deleteRate: function(rateId, placeId, callback){
+		// need to re cal the total rateing
+		var rateUpdate = { $pull: {
+			rate:{_id:rateId}
+		}};
+		Place.update({_id:placeId},rateUpdate, function(err, result){
+			if(err){
+				winston.info('Error in deleteRate:'+err);
+				callback(err, null);
+			} else {
+				callback(null, result);
+			}
+		});
+	}
 };

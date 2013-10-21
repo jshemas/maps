@@ -72,6 +72,11 @@ var routes = [
 		middleware: [PlaceCtrl.getPlaceByLocation]
 	},
 	{
+		path: '/getPlaceById',
+		httpMethod: 'GET',
+		middleware: [PlaceCtrl.getPlaceById]
+	},
+	{
 		path: '/editPlace',
 		httpMethod: 'POST',
 		middleware: [PlaceCtrl.editPlace],
@@ -81,6 +86,40 @@ var routes = [
 		path: '/deletePlace',
 		httpMethod: 'POST',
 		middleware: [PlaceCtrl.deletePlace],
+		accessLevel: accessLevels.admin
+	},
+	{
+		path: '/addComment',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.addComment],
+	},
+	{
+		path: '/editComment',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.editComment],
+		accessLevel: accessLevels.user
+	},
+	{
+		path: '/deleteComment',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.deleteComment],
+		accessLevel: accessLevels.admin
+	},
+	{
+		path: '/addRate',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.addRate],
+	},
+	{
+		path: '/editRate',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.editRate],
+		accessLevel: accessLevels.user
+	},
+	{
+		path: '/deleteRate',
+		httpMethod: 'POST',
+		middleware: [PlaceCtrl.deleteRate],
 		accessLevel: accessLevels.admin
 	},
 

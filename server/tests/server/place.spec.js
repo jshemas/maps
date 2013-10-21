@@ -46,6 +46,14 @@ var place = {
 	'long': 65
 };
 
+var comment = {
+	'content': 'this is a comment'
+};
+
+var rate = {
+	'content': 5
+}
+
 // sample data
 
 var sampleData1 = {
@@ -212,6 +220,89 @@ describe('Places Test - ', function () {
 			expect(result.body.success).to.be(true);
 			done();
 		});
+	});
+
+	it('Make a new Comment', function(done) {
+		user1.id = userId1;
+		passportStub.login(user1); // login as user
+		comment.id = placeId;
+		request(app).post('/addComment').send(comment).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			commentId = result.body.res.comment[0]._id;
+			done();
+		});
+	});
+	it('Find that new comment', function(done) {
+		var data = {'id':placeId};
+		request(app).get('/getPlaceById').send(data).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			var bool = 0;
+			for (var i = 0; i <= result.body.res.comment.length-1; i++) {
+				if (result.body.res.comment[i]._id === commentId) {
+					bool = 1;
+				};
+			};
+			expect(bool).to.be(1);
+			done();
+		});
+	});
+	it('Edit that comment', function(done) {
+		var data = {'placeId':placeId,'commentId':commentId,'content':'edit that comment'};
+		user1.id = userId1;
+		passportStub.login(user1); // login as user
+		request(app).post('/editComment').send(data).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			done();
+		});
+	});
+	it('Delete that new Comment', function(done) {
+		var data = {'placeId':placeId,'commentId':commentId};
+		passportStub.login(admin); // login as admin
+		request(app).post('/deleteComment').send(data).expect(200, done);
+	});
+	it('Make a new Rate', function(done) {
+		user1.id = userId1;
+		passportStub.login(user1); // login as user
+		rate.id = placeId;
+		request(app).post('/addRate').send(rate).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			rateId = result.body.res.rate[0]._id;
+			done();
+		});
+	});
+	it('Find that new rate', function(done) {
+		var data = {'id':placeId};
+		request(app).get('/getPlaceById').send(data).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			var bool = 0;
+			for (var i = 0; i <= result.body.res.rate.length-1; i++) {
+				if (result.body.res.rate[i]._id === rateId) {
+					bool = 1;
+				};
+			};
+			expect(bool).to.be(1);
+			done();
+		});
+	});
+	it('Edit that rate', function(done) {
+		var data = {'placeId':placeId,'rateId':rateId,'content':2};
+		user1.id = userId1;
+		passportStub.login(user1); // login as user
+		request(app).post('/editRate').send(data).end( function(err, result) {
+			expect(result.res.statusCode).to.be(200);
+			expect(result.body.success).to.be(true);
+			done();
+		});
+	});
+	it('Delete that new place', function(done) {
+		var data = {'placeId':placeId,'commentId':commentId};
+		passportStub.login(admin); // login as admin
+		request(app).post('/deleteComment').send(data).expect(200, done);
 	});
 	it('Delete that new place', function(done) {
 		var data = {'id':placeId};
