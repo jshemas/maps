@@ -33,6 +33,17 @@ var PlaceSchema = new mongoose.Schema({
 	pictures: { type: [String] },
 	tags: { type: [String] },
 	website: { type: String },
+	address: {
+		displayName: { type: String },
+		roadNumber: { type: String },
+		road: { type: String },
+		city: { type: String },
+		county: { type: String },
+		state: { type: String },
+		postcode: { type: String },
+		country: { type: String },
+		countryCode: { type: String }
+	},
 	hours: {
 		sunday: { type: String },
 		monday: { type: String },
@@ -276,7 +287,7 @@ module.exports = {
 							winston.info('Error in editRate2:'+err);
 							callback(err, null);
 						} else {
-							if(result == 1) {
+							if(result === true) {
 								callback(null, true);
 							}
 							callback(null, null);
@@ -305,7 +316,7 @@ module.exports = {
 							winston.info('Error in deleteRate2:'+err);
 							callback(err, null);
 						} else {
-							if(result == 1) {
+							if(result === true) {
 								callback(null, true);
 							}
 							callback(null, null);
@@ -327,7 +338,7 @@ module.exports = {
 				}
 				if(totalOverAllRating > 0) {
 					totalOverAllRating = (totalOverAllRating / place.rate.length);
-				};
+				}
 				place.totalOverAllRating = totalOverAllRating;
 				place.save( function(err, result){
 					if(err){
@@ -336,8 +347,9 @@ module.exports = {
 					} else {
 						if(result._id) {
 							callback(null, true);
+						} else {
+							callback(null, null);
 						}
-						callback(null, null);
 					}
 				});
 			} else {
