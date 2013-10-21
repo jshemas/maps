@@ -44,6 +44,10 @@ module.exports = {
 	},
 
 	getPlaceById: function(req, res) {
+		// front end can't send GET calls with data in body =/
+		if(utils.validateVar(req.query.id)) {
+			req.body.id = req.query.id;
+		}
 		utils.validateIDS(req.body.id, function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});

@@ -32,6 +32,7 @@ table.table.table-striped(data-ng-hide="loading")
             th lat
     tbody
         tr(data-ng-repeat="place in places")
-            td {{ place.name }}
+            td
+               a(href='/place/{{place._id}}') {{ place.name }}
             td {{ place.location.coordinates[0] }}
             td {{ place.location.coordinates[1] }}

@@ -62,6 +62,9 @@ angular.module('playground').factory('Place', function($http) {
 		getAllPlaces: function(success, error) {
 			$http.get('/getAllPlace').success(success).error(error);
 		},
+		getPlaceById: function(placeId, success, error) {
+			$http.get('/getPlaceById?id='+placeId).success(success).error(error);
+		},
 		deletePlaces: function(place, success, error) {
 			$http.post('/deletePlaces', place).success(function(res) {
 				success();

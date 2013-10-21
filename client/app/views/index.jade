@@ -16,12 +16,12 @@ html.no-js
     meta(name='viewport', content='width=device-width')
     // Place favicon.ico and apple-touch-icon.png in the root directory
     // build:css(.tmp) styles/main.css
-    link(rel='stylesheet', href='app/styles/bootstrap-combined.no-icons.min.css')
-    link(rel='stylesheet', href='app/styles/leaflet.css')
-    link(rel='stylesheet', href='app/styles/font-awesome.min.css')
-    link(rel='stylesheet', href='app/styles/app.css')
+    link(rel='stylesheet', href='/app/styles/bootstrap-combined.no-icons.min.css')
+    link(rel='stylesheet', href='/app/styles/leaflet.css')
+    link(rel='stylesheet', href='/app/styles/font-awesome.min.css')
+    link(rel='stylesheet', href='/app/styles/app.css')
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="app/styles/leaflet.ie.css" />
+    <link rel="stylesheet" href="/app/styles/leaflet.ie.css" />
     <![endif]-->
     // endbuild
   body(data-ng-cloak='data-ng-cloak', ng-app='playground')
@@ -33,8 +33,8 @@ html.no-js
         a(href='http://browsehappy.com/') upgrade your browser
         | to improve your experience.
     //if lt IE 9
-      script(src='app/lib/es5-sham.min')
-      script(src='app/lib/json3.min')
+      script(src='/app/lib/es5-sham.min')
+      script(src='/app/lib/json3.min')
     // Add your site or application content here
     .navbar(data-ng-controller='NavCtrl')
       .navbar-inner
@@ -65,23 +65,23 @@ html.no-js
     .container
       div(data-ng-view='ng-view')
       .alert.alert-error(data-ng-bind='error', data-ng-show='error')
-    script(src='app/lib/jquery-1.10.2.min.js')
-    script(src='app/lib/angular.min.js')
-    script(src='app/lib/underscore-min.js')
+    script(src='/app/lib/jquery-1.10.2.min.js')
+    script(src='/app/lib/angular.min.js')
+    script(src='/app/lib/underscore-min.js')
     // build:js scripts/plugins.js
     // endbuild
     // build:js scripts/modules.js
-    script(src='app/lib/leaflet.js')
-    script(src='app/lib/angular-leaflet-directive.min.js')
-    script(src='app/lib/angular-resource.min.js')
-    script(src='app/lib/angular-cookies.min.js')
-    script(src='app/lib/angular-sanitize.min.js')
+    script(src='/app/lib/leaflet.js')
+    script(src='/app/lib/angular-leaflet-directive.min.js')
+    script(src='/app/lib/angular-resource.min.js')
+    script(src='/app/lib/angular-cookies.min.js')
+    script(src='/app/lib/angular-sanitize.min.js')
     // endbuild
     // build:js({.tmp,app}) scripts/scripts.js
-    script(src='app/scripts/routingConfig.js')
-    script(src='app/scripts/app.js')
-    script(src='app/scripts/services.js')
-    script(src='app/scripts/controllers.js')
-    script(src='app/scripts/filters.js')
-    script(src='app/scripts/directives.js')
+    script(src='/app/scripts/routingConfig.js')
+    script(src='/app/scripts/app.js')
+    script(src='/app/scripts/services.js')
+    script(src='/app/scripts/controllers.js')
+    script(src='/app/scripts/filters.js')
+    script(src='/app/scripts/directives.js')
     // endbuild

@@ -100,6 +100,20 @@ angular.module('playground').controller('PlaceCtrl',['$rootScope', '$scope', '$l
 	});
 }]);
 
+angular.module('playground').controller('PlaceDetailCtrl',['$rootScope', '$routeParams', '$scope', '$location', 'Place', 'Auth', function($rootScope, $routeParams, $scope, $location, Place, Auth) {
+	$scope.loading = true;
+	$scope.userRoles = Auth.userRoles;
+	$scope.placeId = $routeParams.placeId;
+
+	Place.getPlaceById($scope.placeId, function(res) {
+		$scope.places = res.res;
+		$scope.loading = false;
+	}, function(err) {
+		$rootScope.error = "Failed to fetch places.";
+		$scope.loading = false;
+	});
+}]);
+
 angular.module('playground').controller('PlaceMapCtrl',['$rootScope', '$scope', '$location', 'Place', 'Auth', function($rootScope, $scope, $location, Place, Auth) {
 	$scope.loading = true;
 	$scope.userRoles = Auth.userRoles;
