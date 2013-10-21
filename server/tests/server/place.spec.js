@@ -51,8 +51,8 @@ var place = {
 var sampleData1 = {
 	'name': 'Cosi',
 	'rateing': '6/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 39.959850,
 	'long': -83.00716,
 	'type': 'Museum'
@@ -61,8 +61,8 @@ var sampleData1 = {
 var sampleData2 = {
 	'name': 'Easton Town Center',
 	'rateing': '8/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 40.0504,
 	'long': -82.91541,
 	'type': 'Mall'
@@ -71,8 +71,8 @@ var sampleData2 = {
 var sampleData3 = {
 	'name': 'Columbus Museum of Art',
 	'rateing': '7/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 39.964343,
 	'long': -82.987808,
 	'type': 'Museum'
@@ -81,8 +81,8 @@ var sampleData3 = {
 var sampleData4 = {
 	'name': 'Hollywood Casino',
 	'rateing': '7/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 39.948734,
 	'long': -83.107165,
 	'type': 'Gambeling'
@@ -91,8 +91,8 @@ var sampleData4 = {
 var sampleData5 = {
 	'name': 'Field of Corn',
 	'rateing': '5/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 40.085049,
 	'long': -83.123463,
 	'type': 'Monument'
@@ -101,8 +101,8 @@ var sampleData5 = {
 var sampleData6 = {
 	'name': 'Columbus Zoo',
 	'rateing': '8/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 40.156184,
 	'long': -83.118338,
 	'type': 'Zoo'
@@ -111,8 +111,8 @@ var sampleData6 = {
 var sampleData7 = {
 	'name': 'Franklin Park Conservitory',
 	'rateing': '8/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place tes',
 	'lat': 39.965992,
 	'long': -82.953301,
 	'type': 'Museum'
@@ -121,8 +121,8 @@ var sampleData7 = {
 var sampleData8 = {
 	'name': 'Alum Creek Lake',
 	'rateing': '6/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 40.190699,
 	'long': -82.971449,
 	'type': 'Beach'
@@ -131,8 +131,8 @@ var sampleData8 = {
 var sampleData9 = {
 	'name': 'Mirror Lake',
 	'rateing': '6/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 39.998044,
 	'long': -83.014235,
 	'type': 'Lake'
@@ -141,8 +141,8 @@ var sampleData9 = {
 var sampleData10 = {
 	'name': 'Wexner Center for the Arts',
 	'rateing': '7/10',
-	'description': 'test place',
-	'category': 'test place',
+	'description': 'test place test',
+	'category': 'test place test',
 	'lat': 40.000422,
 	'long': -83.008893,
 	'type': 'Museum'
@@ -204,7 +204,7 @@ describe('Places Test - ', function () {
 		});
 	});
 	it('Edit that place', function(done) {
-		var data = {'id':placeId,'name':'editName','lat':'22','long':'44', 'description':'test', 'category':'category'};
+		var data = {'id':placeId,'name':'editName','lat':'22','long':'44', 'description':'testtest', 'category':'category'};
 		user1.id = userId1;
 		passportStub.login(user1); // login as user
 		request(app).post('/editPlace').send(data).end( function(err, result) {

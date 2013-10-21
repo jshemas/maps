@@ -5,10 +5,10 @@ var Place = require('../models/Place.js'),
 module.exports = {
 	createPlace: function(req, res) {
 		// need to update validion rules
-		// utils.validateCreatePlace(req.body.name, req.body.long, req.body.lat, req.body.description, function(err) {
-		// 	if(err.length >= 1){
-		// 		return res.send(200, {'success': false, 'err': err});
-		// 	} else {
+		utils.validateCreatePlace(req.body.name, req.body.long, req.body.lat, req.body.description, req.body.category, function(err) {
+			if(err.length >= 1){
+				return res.send(200, {'success': false, 'err': err});
+			} else {
 				// need to pass real user ID
 				Place.addPlace(req.body.name, req.body.lat, req.body.long, '456', req.body.description, req.body.category, function(err, result) {
 					if(err) {
@@ -16,8 +16,8 @@ module.exports = {
 					}
 					res.json(200,{'success': true, 'res': result});
 				});
-		//	}
-		// });
+			}
+		});
 	},
 
 	getAllPlaces: function(req, res) {
@@ -41,10 +41,10 @@ module.exports = {
 
 	editPlace: function(req, res) {
 		// need to update validion rules
-		// utils.validateEditPlace(req.body.id, req.body.name, req.body.long, req.body.lat, req.body.description, function(err) {
-		// 	if(err.length >= 1){
-		// 		return res.send(200, {'success': false, 'err': err});
-		// 	} else {
+		utils.validateEditPlace(req.body.id, req.body.name, req.body.long, req.body.lat, req.body.description, req.body.category, function(err) {
+			if(err.length >= 1){
+				return res.send(200, {'success': false, 'err': err});
+			} else {
 				Place.editPlace(req.body.id, req.body.name, req.body.lat, req.body.long, req.user.id, req.body.description, req.body.category, function(err, result) {
 					if(err){
 						return res.send(200, {'success': false, 'err': err});
@@ -55,8 +55,8 @@ module.exports = {
 						return res.send(200, {'success': false, 'err': 'none'});
 					}
 				});
-		//	}
-		// });
+			}
+		});
 	},
 
 	deletePlace: function(req, res) {

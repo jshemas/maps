@@ -43,31 +43,39 @@ module.exports = {
 	/*
 	 * validateCreatePlace is used in 'createPlace'
 	 */
-	validateCreatePlace: function(name, lat, long, callback) {
-		var nameRes = this.validateUsername(name);
-		var latRes = this.validateUsername(lat);
-		var longRes = this.validateUsername(long);
+	validateCreatePlace: function(name, lat, long, description, category, callback) {
+		var nameRes = this.validatePlaceName(name);
+		var latRes = this.validatePlaceCord(lat);
+		var longRes = this.validatePlaceCord(long);
+		var descriptionRes = this.validatePlaceDescription(description);
+		var categoryRes = this.validatePlaceCategory(category);
 		var errArr = [];
 		if(nameRes){errArr.push(nameRes);}
 		if(latRes){errArr.push(latRes);}
 		if(longRes){errArr.push(longRes);}
-		callback([]);
+		if(descriptionRes){errArr.push(descriptionRes);}
+		if(categoryRes){errArr.push(categoryRes);}
+		callback(errArr);
 	},
 
 	/*
 	 * validateEditPlace is used in 'editPlace'
 	 */
-	validateEditPlace: function(id, name, lat, long, callback) {
+	validateEditPlace: function(id, name, lat, long, description, category, callback) {
 		var idRes = this.validateId(id);
-		var nameRes = this.validateUsername(name);
-		var latRes = this.validateUsername(lat);
-		var longRes = this.validateUsername(long);
+		var nameRes = this.validatePlaceName(name);
+		var latRes = this.validatePlaceCord(lat);
+		var longRes = this.validatePlaceCord(long);
+		var descriptionRes = this.validatePlaceDescription(description);
+		var categoryRes = this.validatePlaceCategory(category);
 		var errArr = [];
 		if(idRes){errArr.push(idRes);}
 		if(nameRes){errArr.push(nameRes);}
 		if(latRes){errArr.push(latRes);}
 		if(longRes){errArr.push(longRes);}
-		callback([]);
+		if(descriptionRes){errArr.push(descriptionRes);}
+		if(categoryRes){errArr.push(categoryRes);}
+		callback(errArr);
 	},
 
 	/*
@@ -164,6 +172,91 @@ module.exports = {
 			return;
 		} else {
 			return 'Invalid Bool';
+		}
+	},
+
+	/**
+	 * validate place name
+	 * @param string name - user input: name
+	 */
+	validatePlaceName: function(name) {
+		//word characters such as 0-9, A-Z, a-z, _
+		//literal period
+		//literal @
+		// space
+		//between 3 and 40 characters long
+		if(this.validateVar(name)){
+			var regex = /^[\w\.@ ]{3,40}$/;
+			if(regex.test(name)){
+				return;
+			} else {
+				return 'Invalid Name';
+			}
+		} else {
+			return 'Invalid Name';
+		}
+	},
+
+	/**
+	 * validate coordinates
+	 * @param number coordinates - user input: coordinates
+	 */
+	validatePlaceCord: function(cord) {
+		// should add more valideion on this
+		// is this a number?
+		if(this.validateVar(cord)){
+			var regex = /(\d+)/;
+			if(regex.test(cord)){
+				return;
+			} else {
+				return 'Invalid Coordinates';
+			}
+		} else {
+			return 'Invalid Coordinates';
+		}
+	},
+
+	/**
+	 * validate description
+	 * @param string description - user input: description
+	 */
+	validatePlaceDescription: function(description) {
+		//word characters such as 0-9, A-Z, a-z, _
+		//literal period
+		//literal @
+		// space
+		//between 6 and 40 characters long
+		if(this.validateVar(description)){
+			var regex = /^[\w\.@ ]{6,40}$/;
+			if(regex.test(description)){
+				return;
+			} else {
+				return 'Invalid Description';
+			}
+		} else {
+			return 'Invalid Description';
+		}
+	},
+
+	/**
+	 * validate category
+	 * @param string category - user input: category
+	 */
+	validatePlaceCategory: function(category) {
+		//word characters such as 0-9, A-Z, a-z, _
+		//literal period
+		//literal @
+		// space
+		//between 6 and 40 characters long
+		if(this.validateVar(category)){
+			var regex = /^[\w\.@ ]{6,40}$/;
+			if(regex.test(category)){
+				return;
+			} else {
+				return 'Invalid Category';
+			}
+		} else {
+			return 'Invalid Category';
 		}
 	},
 
