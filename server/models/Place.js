@@ -33,6 +33,7 @@ var PlaceSchema = new mongoose.Schema({
 	comment: [Comment],
 	pictures: { type: [String] },
 	tags: { type: [String] },
+	cost: { type: String },
 	website: { type: String },
 	address: {
 		displayName: { type: String },

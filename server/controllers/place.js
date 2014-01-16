@@ -4,12 +4,13 @@ var Place = require('../models/Place.js'),
 
 module.exports = {
 	createPlace: function(req, res) {
-		utils.validateCreatePlace(req.body.name, req.body.long, req.body.lat, req.body.description, req.body.category, function(err) {
+		// use description and category
+		utils.validateCreatePlace(req.body.name, req.body.long, req.body.lat, 'req.body.description', 'req.body.category', function(err) {
 			if(err.length >= 1){
 				return res.send(200, {'success': false, 'err': err});
 			} else {
 				// need to pass real user ID
-				Place.addPlace(req.body.name, req.body.lat, req.body.long, '456', req.body.description, req.body.category, function(err, result) {
+				Place.addPlace(req.body.name, req.body.lat, req.body.long, '456', 'req.body.description', 'req.body.category', function(err, result) {
 					if(err) {
 						return res.send(200, {'success': false, 'err': err});
 					}

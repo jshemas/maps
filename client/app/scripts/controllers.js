@@ -76,7 +76,7 @@ angular.module('playground').controller('AdminCtrl',['$rootScope', '$scope', 'Us
 	});
 }]);
 
-angular.module('playground').controller('PlaceCtrl',['$rootScope', '$scope', '$location', 'Place', 'Auth', function($rootScope, $scope, $location, Place, Auth) {
+angular.module('playground').controller('PlaceCtrl',['$rootScope', '$scope', '$location', '$route', 'Place', 'Auth', function($rootScope, $scope, $location, $route, Place, Auth) {
 	$scope.loading = true;
 	$scope.userRoles = Auth.userRoles;
 	$scope.addPlace = function() {
@@ -85,8 +85,7 @@ angular.module('playground').controller('PlaceCtrl',['$rootScope', '$scope', '$l
 			long: $scope.long,
 			lat: $scope.lat
 		}, function() {
-			//for some reason I can't go back to this page
-			$location.path('/');
+			$route.reload();
 		}, function(err) {
 			$rootScope.error = err;
 		});
