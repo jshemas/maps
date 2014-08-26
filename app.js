@@ -6,7 +6,7 @@ var express = require('express'),
 
 var app = module.exports = express();
 
-mongoose.connect('mongodb://localhost/something', function onMongooseError(err) {
+mongoose.connect('mongodb://localhost/maps', function onMongooseError(err) {
 	if (err) { throw err; }
 });
 

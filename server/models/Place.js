@@ -65,11 +65,12 @@ module.exports = {
 			name: name,
 			category: category,
 			description: description,
+			location: {
+				coordinates: [long,lat]
+			},
 			author: author
 		});
 		place.location.type = 'Point';
-		place.location.coordinates.push(long);
-		place.location.coordinates.push(lat);
 		place.save( function(err, result){
 			if(err){
 				winston.info('Error in addPlace:'+err);
