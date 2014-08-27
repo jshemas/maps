@@ -1,0 +1,17 @@
+<h1>See Places</h1>
+<table data-ng-hide="loading" class="table table-striped">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>lat</th>
+      <th>long</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ places.name }}</td>
+      <td>{{ places.location.coordinates[0] }}</td>
+      <td>{{ places.location.coordinates[1] }}</td>
+    </tr>
+  </tbody>
+</table>

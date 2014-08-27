@@ -1,0 +1,18 @@
+<h1>See Places</h1>
+<table data-ng-hide="loading" class="table table-striped">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>lat</th>
+      <th>long</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-ng-repeat="place in places">
+      <td>{{ place.name }}</td>
+      <td>{{ place.location.coordinates[0] }}</td>
+      <td>{{ place.location.coordinates[1] }}</td>
+    </tr>
+  </tbody>
+</table>
+<leaflet center="columbus" markers="markers" width="640" height="400"></leaflet>

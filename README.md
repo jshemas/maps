@@ -1,4 +1,4 @@
-playground
+Maps
 ==========
 
-Just messing around with node/mongo/mysql/angular/other stuff.
+Mess around with mongoDB's geospatial query. This is a MEAN app.

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> </html>
+<![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> </html>
+<![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> </html>
+<![endif]-->
+<!-- [if gt IE 8] <!-->
+<html class="no-js">
+  <!-- <![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Play Ground</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory-->
+    <!-- build:css(.tmp) styles/main.css-->
+    <link rel="stylesheet" href="/app/styles/bootstrap-combined.no-icons.min.css">
+    <link rel="stylesheet" href="/app/styles/leaflet.css">
+    <link rel="stylesheet" href="/app/styles/font-awesome.min.css">
+    <link rel="stylesheet" href="/app/styles/app.css"><!--[if lte IE 8]>
+    <link rel="stylesheet" href="/app/styles/leaflet.ie.css" />
+    <![endif]-->
+    <!-- endbuild-->
+  </head>
+  <body data-ng-cloak="data-ng-cloak" ng-app="playground">
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an<strong>outdated</strong>browser. Please<a href="http://browsehappy.com/">upgrade your browser</a>to improve your experience.</p>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script src="/app/lib/es5-sham.min"></script>
+    <script src="/app/lib/json3.min"></script>
+    <![endif]-->
+    <!-- Add your site or application content here-->
+    <div data-ng-controller="NavCtrl" class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <ul class="nav">
+            <li data-access-level="accessLevels.anon" active-nav="active-nav"><a href="/login">Log in</a></li>
+            <li data-access-level="accessLevels.anon" active-nav="active-nav"><a href="/register">Register</a></li>
+            <li data-access-level="accessLevels.user" active-nav="active-nav"><a href="/">Home</a></li>
+            <li data-access-level="accessLevels.user" active-nav="active-nav"><a href="/private">Private</a></li>
+            <li data-access-level="accessLevels.admin" active-nav="active-nav"><a href="/admin">Admin</a></li>
+            <li active-nav="active-nav"><a href="/place">Places</a></li>
+            <li active-nav="active-nav"><a href="/placeMap">Places Map</a></li>
+            <li active-nav="active-nav"><a href="/mapTest">Map Test</a></li>
+            <li data-access-level="accessLevels.user"><a href="" data-ng-click="logout()">Log out</a></li>
+          </ul>
+          <div id="userInfo" data-access-level="accessLevels.user" class="pull-right">Welcome<strong>{{ user.username }} </strong><span data-ng-class="{&quot;label-info&quot;: user.role.title == userRoles.user.title, &quot;label-success&quot;: user.role.title == userRoles.admin.title}" class="label">{{ user.role.title }}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div data-ng-view="ng-view"></div>
+      <div data-ng-bind="error" data-ng-show="error" class="alert alert-error"></div>
+    </div>
+    <script src="/app/lib/jquery-1.10.2.min.js"></script>
+    <script src="/app/lib/angular.min.js"></script>
+    <script src="/app/lib/underscore-min.js"></script>
+    <!-- build:js scripts/plugins.js-->
+    <!-- endbuild-->
+    <!-- build:js scripts/modules.js-->
+    <script src="/app/lib/leaflet.js"></script>
+    <script src="/app/lib/angular-leaflet-directive.min.js"></script>
+    <script src="/app/lib/angular-resource.min.js"></script>
+    <script src="/app/lib/angular-cookies.min.js"></script>
+    <script src="/app/lib/angular-sanitize.min.js"></script>
+    <!-- endbuild-->
+    <!-- build:js({.tmp,app}) scripts/scripts.js-->
+    <script src="/app/scripts/routingConfig.js"></script>
+    <script src="/app/scripts/app.js"></script>
+    <script src="/app/scripts/services.js"></script>
+    <script src="/app/scripts/controllers.js"></script>
+    <script src="/app/scripts/filters.js"></script>
+    <script src="/app/scripts/directives.js"></script>
+    <!-- endbuild-->
+  </body>
+</html>

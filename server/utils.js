@@ -12,40 +12,60 @@ module.exports = {
 	/*
 	 * validateRegister is used in 'register'
 	 */
-	validateRegister: function(username, password, email, callback) {
+	validateRegister: function (username, password, email, callback) {
 		var usernameRes = this.validateUsername(username);
 		var passwordRes = this.validatePassword(password);
 		var emailRes = this.validateEmail(email);
 		var errArr = [];
-		if(usernameRes){errArr.push(usernameRes);}
-		if(passwordRes){errArr.push(passwordRes);}
-		if(emailRes){errArr.push(emailRes);}
+		if (usernameRes) {errArr.push(usernameRes); }
+		if (passwordRes) {errArr.push(passwordRes); }
+		if (emailRes) {errArr.push(emailRes); }
+		callback(errArr);
+	},
+
+	/*
+	 * validateUsername is used in 'isUsernameTaken' and 'getUserByUserName'
+	 */
+	validateTheUsername: function (username, callback) {
+		var usernameRes = this.validateUsername(username);
+		var errArr = [];
+		if (usernameRes) {errArr.push(usernameRes); }
+		callback(errArr);
+	},
+
+	/*
+	 * validateIsEmailTaken is used in 'isEmailTaken'
+	 */
+	validateIsEmailTaken: function (email, callback) {
+		var emailRes = this.validateEmail(email);
+		var errArr = [];
+		if (emailRes) {errArr.push(emailRes); }
 		callback(errArr);
 	},
 
 	/*
 	 * validateEditUser is used in 'editUser'
 	 */
-	validateEditUser: function(id, password, email, callback) {
+	validateEditUser: function (id, password, email, callback) {
 		var idRes = this.validateId(id);
 		var passwordRes = this.validatePassword(password);
 		var emailRes = this.validateEmail(email);
 		var errArr = [];
-		if(idRes){errArr.push(idRes);}
-		if(passwordRes){errArr.push(passwordRes);}
-		if(emailRes){errArr.push(emailRes);}
+		if (idRes) {errArr.push(idRes); }
+		if (passwordRes) {errArr.push(passwordRes); }
+		if (emailRes) {errArr.push(emailRes); }
 		callback(errArr);
 	},
 
 	/*
 	 * validateLogIn is used in 'editUser'
 	 */
-	validateLogIn: function(username, password, callback) {
+	validateLogIn: function (username, password, callback) {
 		var usernameRes = this.validateUsername(username);
 		var passwordRes = this.validatePassword(password);
 		var errArr = [];
-		if(usernameRes){errArr.push(usernameRes);}
-		if(passwordRes){errArr.push(passwordRes);}
+		if (usernameRes) {errArr.push(usernameRes); }
+		if (passwordRes) {errArr.push(passwordRes); }
 		callback(errArr);
 	},
 
@@ -154,32 +174,41 @@ module.exports = {
 	},
 
 	/*
-	 * validateIDS is used in (all over)
+	 * validateIDS is used all over the place
 	 */
-	validateIDS: function(id, callback) {
+	validateIDS: function (id, callback) {
 		var idRes = this.validateId(id);
 		var errArr = [];
-		if(idRes){errArr.push(idRes);}
+		if (idRes) {errArr.push(idRes); }
+		callback(errArr);
+	},
+
+	validateIDS2: function (id1, id2, callback) {
+		var idRes1 = this.validateId(id1);
+		var idRes2 = this.validateId(id2);
+		var errArr = [];
+		if (idRes1) {errArr.push(idRes1); }
+		if (idRes2) {errArr.push(idRes2); }
+		callback(errArr);
+	},
+
+	validateIDS3: function (id1, id2, id3, callback) {
+		var idRes1 = this.validateId(id1);
+		var idRes2 = this.validateId(id2);
+		var idRes3 = this.validateId(id3);
+		var errArr = [];
+		if (idRes1) {errArr.push(idRes1); }
+		if (idRes2) {errArr.push(idRes2); }
+		if (idRes3) {errArr.push(idRes3); }
 		callback(errArr);
 	},
 
 	/*
-	 * validateIDS2 is used in (all over)
-	 */
-	validateIDS2: function(id, id2, callback) {
-		var idRes = this.validateId(id);
-		var idRes2 = this.validateId(id2);
-		var errArr = [];
-		if(idRes){errArr.push(idRes);}
-		if(idRes2){errArr.push(idRes2);}
-		callback(errArr);
-	},
-	/*
 	 * validate var
 	 * @param string var - user input
 	 */
-	validateVar: function(inputVar) {
-		if ( inputVar === null || (inputVar && inputVar.length < 1) || typeof inputVar === 'undefined' || !inputVar) {
+	validateVar: function (inputVar) {
+		if (inputVar === null || (inputVar && inputVar.length < 1) || typeof inputVar === 'undefined' || !inputVar) {
 			return false;
 		} else {
 			return true;
@@ -187,21 +216,20 @@ module.exports = {
 	},
 
 	/**
-	 * validate id
-	 * @param string id - user input: id
+	 * validate number
+	 * @param number num - user input: num
 	 */
-	validateId: function(id) {
-		//word characters such as a-z, 0-9,
-		//between 1 and 45 characters long
-		if(this.validateVar(id)){
-			var regex = /^[a-z0-9]{1,45}$/;
-			if(regex.test(id)){
+	validateNumber: function (num) {
+		//word characters such as 0-9
+		if (this.validateVar(num)) {
+			var regex = /^\d+$/;
+			if (regex.test(num)) {
 				return;
 			} else {
-				return 'Invalid Id';
+				return 'Invalid Number';
 			}
 		} else {
-			return 'Invalid Id';
+			return 'Invalid Number';
 		}
 	},
 
@@ -209,14 +237,15 @@ module.exports = {
 	 * validate username
 	 * @param string username - user input: username
 	 */
-	validateUsername: function(username) {
+	validateUsername: function (username) {
 		//word characters such as 0-9, A-Z, a-z, _
 		//literal period
 		//literal @
+		//must have at least one letter
 		//between 6 and 40 characters long
-		if(this.validateVar(username)){
-			var regex = /^[\w\.@]{6,40}$/;
-			if(regex.test(username)){
+		if (this.validateVar(username)) {
+			var regex = /^(?=.*[a-zA-Z])([a-zA-Z0-9.@_]+){6,40}$/;
+			if (regex.test(username)) {
 				return;
 			} else {
 				return 'Invalid Username';
@@ -230,34 +259,20 @@ module.exports = {
 	 * validate password
 	 * @param string password - user input: password
 	 */
-	validatePassword: function(password) {
+	validatePassword: function (password) {
 		//word characters such as 0-9, A-Z, a-z, _
 		//literal period
 		//literal @
 		//between 6 and 40 characters long
-		if(this.validateVar(password)){
+		if (this.validateVar(password)) {
 			var regex = /^[\w\.@]{6,40}$/;
-			if(regex.test(password)){
+			if (regex.test(password)) {
 				return;
 			} else {
 				return 'Invalid Password';
 			}
 		} else {
 			return 'Invalid Password';
-		}
-	},
-
-	/**
-	 * validate bool
-	 * @param string bool - user input: bool
-	 */
-	validateBool: function(boolContent) {
-		//word characters such as 1 or 0
-		//1 characters long
-		if(boolContent === 1 || boolContent === 0){
-			return;
-		} else {
-			return 'Invalid Bool';
 		}
 	},
 
@@ -407,42 +422,111 @@ module.exports = {
 	},
 
 	/**
+	 * validate bool
+	 * @param string bool - user input: bool
+	 */
+	validateBool: function (answerContent, flag) {
+		//word characters such as 1 or 0
+		//1 characters long
+		if (answerContent === 'true' || answerContent === 'false') {
+			return;
+		} else {
+			if (flag === 'vote') {
+				return 'Invalid Vote';
+			} else if (flag === 'anonymous') {
+				return 'Invalid Anonymous Check';
+			} else {
+				return 'Invalid Bool';
+			}
+		}
+	},
+
+	/**
+	 * validate id
+	 * @param string id - user input: id
+	 */
+	validateId: function (id) {
+		//word characters such as 0-9,
+		//between 1 and 45 characters long
+		if (this.validateVar(id)) {
+			var regex = /^[0-9a-fA-F]{24}$/;
+			if (regex.test(id)) {
+				return;
+			} else {
+				return 'Invalid Id';
+			}
+		} else {
+			return 'Invalid Id';
+		}
+	},
+
+	/**
 	 * mysqlRealEscapeString string
 	 * @param string str - user input: string
 	 */
-	mysqlRealEscapeString: function(str) {
-		return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
-			switch (char) {
-			case "\0":
-				return "\\0";
-			case "\x08":
-				return "\\b";
-			case "\x09":
-				return "\\t";
-			case "\x1a":
-				return "\\z";
-			case "\n":
-				return "\\n";
-			case "\r":
-				return "\\r";
-			case "\"":
-			case "'":
-			case "\\":
-			case "%":
-				return "\\"+char; // prepends a backslash to backslash, percent, and double/single quotes
+	mysqlRealEscapeString: function (str) {
+		var regex = /^\d{1,100}$/;
+		if (regex.test(str)) {
+			return str; //if str is a number, just return that
+		} else {
+			return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+				switch (char) {
+				case "\0":
+					return "\\0";
+				case "\x08":
+					return "\\b";
+				case "\x09":
+					return "\\t";
+				case "\x1a":
+					return "\\z";
+				case "\n":
+					return "\\n";
+				case "\r":
+					return "\\r";
+				case "\"":
+				case "'":
+				case "\\":
+				case "%":
+					return "\\" + char; // prepends a backslash to backslash, percent, and double/single quotes
+				}
+			});
+		}
+	},
+
+	/*
+	 * validate page number
+	 * @param num var - inputNumber
+	 * @param function callback
+	 */
+	validatePageNumber: function (inputNumber, callback) {
+		//is there a number?
+		if (this.validateVar(inputNumber)) {
+			var regex = /^\d+$/;
+			if (regex.test(inputNumber)) {
+				if (inputNumber > 100) {
+					callback(1); // shouldn't get any page passed 100
+				} else {
+					callback(inputNumber); // page number is fine
+				}
+			} else {
+				// bad number enter, return page one
+				callback(1);
 			}
-		});
+		} else {
+			// no page number enter, return page one
+			callback(1);
+		}
 	},
 
 	/**
 	 * validate email
 	 * @param string email - user input: email
 	 */
-	validateEmail: function(email) {
+	validateEmail: function (email) {
 		// http://www.regular-expressions.info/email.html
-		if(this.validateVar(email)){
-			var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
-			if(regex.test(email)){
+		if (this.validateVar(email)) {
+			var regex = /[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
+			if (regex.test(email)) {
 				return;
 			} else {
 				return 'Invalid Email';

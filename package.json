@@ -1,23 +1,39 @@
 {
-  "name": "jshemas-playground",
-  "description": "best playground ever",
-  "homepage": "localhost",
+  "name": "maps",
+  "description": "best maps ever",
+  "homepage": "http://www.localhost.com",
   "version": "0.1.0",
   "dependencies": {
-    "express": "3.4.0",
-    "jade": "0.35.0",
-    "passport": "0.1.17",
-    "passport-local": "0.1.6",
-    "underscore": "1.5.2",
-    "validator": "1.5.1",
+    "express": "4.5.1",
+    "body-parser": "1.5.0",
+    "method-override": "2.1.2",
+    "errorhandler" : "1.1.1",
+    "compression": "1.0.9",
+    "ect": "0.5.9",
     "mongoose": "3.8.15",
-    "winston": "0.7.2",
-    "passport-stub": "0.1.5",
-    "encryptionhelper": "0.0.3"
+    "passport": "0.2.0",
+    "passport-local": "1.0.0",
+    "express-jwt": "0.3.1",
+    "jsonwebtoken": "0.4.1",
+    "underscore": "1.6.0",
+    "winston": "0.7.3",
+    "encryptionhelper": "0.0.3",
+    "sanitize-html": "1.3.0",
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-clean": "0.5.0",
+    "grunt-contrib-copy": "0.5.0",
+    "grunt-contrib-cssmin": "0.10.0",
+    "grunt-contrib-jshint": "0.10.0",
+    "grunt-contrib-uglify": "0.4.1",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-express-server": "0.4.17",
+    "grunt-mocha-test": "0.11.0",
+    "grunt-protractor-runner": "1.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jshemas/playground"
+    "url": "https://github.com/jshemas/maps"
   },
   "author": {
     "name": "jshemas"
@@ -26,8 +42,8 @@
     "test": "mocha server/tests --recursive"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm": "1.2.x"
+    "node": "0.10.30",
+    "npm": "1.4.21"
   },
   "licenses": [
     {
@@ -35,17 +51,10 @@
     }
   ],
   "devDependencies": {
-    "sinon": "1.7.2",
-    "chai": "1.6.1",
-    "supertest": "0.8.0",
-    "expect.js": "0.2.0",
-    "mocha": "1.10.0",
-    "grunt-mocha-test": "0.7.0",
-    "grunt-karma": "0.6.2",
-    "grunt-contrib-jshint": "0.6.4",
-    "grunt-express-server": "0.4.4",
-    "grunt-contrib-watch": "0.5.0",
-    "karma-junit-reporter": "0.1.0",
-    "karma-ng-scenario": "0.1.0"
+    "supertest": "0.13.0",
+    "expect.js": "0.3.1",
+    "mocha": "1.21.0",
+    "passport-stub": "1.0.0",
+    "protractor": "1.0.0"
   }
 }

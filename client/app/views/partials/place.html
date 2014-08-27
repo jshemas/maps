@@ -1,0 +1,49 @@
+<h1>Add Places</h1>
+<form ng-submit="addPlace()" name="addPlaceForm" class="form-horizontal">
+  <div class="control-group">
+    <label for="name" class="control-label">name</label>
+    <div class="controls">
+      <input type="text" data-ng-model="name" placeholder="name" name="name" required="required" data-ng-minlength="1" data-ng-maxlength="20" autofocus="autofocus"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="lat" class="control-label">lat</label>
+    <div class="controls">
+      <input type="text" data-ng-model="lat" placeholder="lat" name="lat" required="required" data-ng-minlength="1" data-ng-maxlength="60"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="long" class="control-label">long</label>
+    <div class="controls">
+      <input type="text" data-ng-model="long" placeholder="long" name="long" required="required" data-ng-minlength="1" data-ng-maxlength="60"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" data-ng-disabled="addPlaceForm.$invalid" class="btn">Submit</button>
+    </div>
+  </div>
+  <div ng-show="addPlaceForm.$invalid &amp;&amp; addPlaceForm.$dirty" class="alert alert-error"><strong>Please correct the following errors:</strong>
+    <ul>
+      <li ng-show="addCatForm.name.$error.required">name is required</li>
+      <li ng-show="addCatForm.name.$error.minlength">name has to be at least 1 character long</li>
+      <li ng-show="addCatForm.name.$error.maxlength">name has to be at most 20 character long</li>
+    </ul>
+  </div>
+</form>
+<table data-ng-hide="loading" class="table table-striped">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>lat</th>
+      <th>long</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-ng-repeat="place in places">
+      <td><a href="/place/{{place._id}}">{{ place.name }}</a></td>
+      <td>{{ place.location.coordinates[0] }}</td>
+      <td>{{ place.location.coordinates[1] }}</td>
+    </tr>
+  </tbody>
+</table>

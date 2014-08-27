@@ -1,41 +1,30 @@
-var app = require('../../../app'),
-	request = require('supertest'),
+var request = require('supertest'),
+	app = require('../../app'),
+	supertest = request(app),
 	expect = require('expect.js'),
-	passportStub = require('passport-stub');
-passportStub.install(app);
+	jwt = require('jsonwebtoken'),
+	secret = require('../../config/secret');
 
-// user account
 var user1 = {
-	'username':'userOne',
-	'email':'jimmy@jimmy.com',
-	'role': {
-		bitMask: 2,
-		title: 'user'
+		'username':'userOne'+(new Date).getTime(),
+		'email':'jimmy'+(new Date).getTime()+'@jimmy.com',
+		'role': 'user',
+		'password':'123456789'
 	},
-	'password':'123456789'
-};
-
-var user2 = {
-	'username':'userTwo',
-	'email':'jimmy@jimmy.com',
-	'role': {
-		bitMask: 2,
-		title: 'user'
+	user2 = {
+		'username':'userTwo'+(new Date).getTime(),
+		'email':'jimmy2'+(new Date).getTime()+'@jimmy.com',
+		'role': 'user',
+		'password':'123456789'
 	},
-	'password':'123456789'
-};
-
-// admin account
-var admin = {
-	'username':'admin',
-	'email':'admin@admin.com',
-	'role': {
-		bitMask: 4,
-		title: 'admin'
-	},
-	'id': '1',
-	'password':'superpassword'
-};
+	admin = {
+		'username':'admin',
+		'email':'admin@admin.com',
+		'role': 'admin',
+		'id': '1',
+		'password':'superpassword',
+		'token':''
+	};
 
 // places data
 var place = {
@@ -55,7 +44,6 @@ var rate = {
 }
 
 // sample data
-
 var sampleData1 = {
 	'name': 'Cosi',
 	'rateing': '6/10',
@@ -163,34 +151,47 @@ var locData = {
 	'long': -83.00716
 }
 
+// build admin token
+var profile = {
+		id: admin.id,
+		username: admin.username,
+		role: admin.role
+	},
+	token = jwt.sign(profile, secret.jwtSecret, { expiresInMinutes: 60 * 5 });
+admin.token = token;
+
 var userId1, userId2, placeId;
 
 var sampleData1Id, sampleData2Id, sampleData3Id, sampleData4Id, sampleData5Id, sampleData6Id, sampleData7Id, sampleData8Id, sampleData9Id, sampleData10Id;
 
+afterEach(function() {
+	setTimeout(function() {
+		// delay for 500ms, too many open file/connections
+	}, 500);
+});
+
 describe('Places Test - ', function () {
-	afterEach(function() {
-		passportStub.logout(); // logout after each test
-	});
 	it('Register a new user1 - Return a 200', function(done) {
-		request(app).post('/register').send(user1).end( function(err, result) {
+		supertest.post('/api/user').send(user1).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			userId1 = result.body.id;
+			user1.token = result.body.token;
 			done();
 		});
 	});
 	it('Register a new user2 - Return a 200', function(done) {
-		request(app).post('/register').send(user2).end( function(err, result) {
+		supertest.post('/api/user').send(user2).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			userId2 = result.body.id;
+			user2.token = result.body.token;
 			done();
 		});
 	});
 	it('Make a new place', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(place).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(place).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			placeId = result.body.res._id;
@@ -198,7 +199,7 @@ describe('Places Test - ', function () {
 		});
 	});
 	it('Find that new place', function(done) {
-		request(app).get('/getAllPlace').end( function(err, result) {
+		supertest.get('/api/getAllPlace').end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			var bool = 0;
@@ -214,19 +215,16 @@ describe('Places Test - ', function () {
 	it('Edit that place', function(done) {
 		var data = {'id':placeId,'name':'editName','lat':'22','long':'44', 'description':'testtest', 'category':'category'};
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/editPlace').send(data).end( function(err, result) {
+		supertest.put('/api/s/editPlace').send(data).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			done();
 		});
 	});
-
 	it('Make a new Comment', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
 		comment.id = placeId;
-		request(app).post('/addComment').send(comment).end( function(err, result) {
+		supertest.post('/api/s/addComment').send(comment).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			commentId = result.body.res.comment[0]._id;
@@ -235,7 +233,7 @@ describe('Places Test - ', function () {
 	});
 	it('Find that new comment', function(done) {
 		var data = {'id':placeId};
-		request(app).get('/getPlaceById').send(data).end( function(err, result) {
+		supertest.get('/api/getPlaceById').send(data).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			var bool = 0;
@@ -251,8 +249,7 @@ describe('Places Test - ', function () {
 	it('Edit that comment', function(done) {
 		var data = {'placeId':placeId,'commentId':commentId,'content':'edit that comment'};
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/editComment').send(data).end( function(err, result) {
+		supertest.put('/api/s/editComment').send(data).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			done();
@@ -260,14 +257,12 @@ describe('Places Test - ', function () {
 	});
 	it('Delete that new Comment', function(done) {
 		var data = {'placeId':placeId,'commentId':commentId};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deleteComment').send(data).expect(200, done);
+		supertest.delete('/api/s/deleteComment').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Make a new Rate', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
 		rate.id = placeId;
-		request(app).post('/addRate').send(rate).end( function(err, result) {
+		supertest.post('/api/s/addRate').send(rate).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			rateId = result.body.res.rate[0]._id;
@@ -276,7 +271,7 @@ describe('Places Test - ', function () {
 	});
 	it('Find that new rate', function(done) {
 		var data = {'id':placeId};
-		request(app).get('/getPlaceById').send(data).end( function(err, result) {
+		supertest.get('/api/getPlaceById').send(data).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			var bool = 0;
@@ -292,8 +287,7 @@ describe('Places Test - ', function () {
 	it('Edit that rate', function(done) {
 		var data = {'placeId':placeId,'rateId':rateId,'content':2};
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/editRate').send(data).end( function(err, result) {
+		supertest.put('/api/s/editRate').send(data).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			done();
@@ -301,42 +295,37 @@ describe('Places Test - ', function () {
 	});
 	it('Delete that new Rate', function(done) {
 		var data = {'placeId':placeId,'rateId':rateId};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deleteRate').send(data).expect(200, done);
+		supertest.delete('/api/s/deleteRate').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that new place', function(done) {
 		var data = {'id':placeId};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('delete the user1 we made - Return a 200', function(done) {
 		var data = {'id':userId1};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deleteUser').send(data).expect(200, done);
+		supertest.delete('/api/s/user').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('delete the user2 we made - Return a 200', function(done) {
 		var data = {'id':userId2};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deleteUser').send(data).expect(200, done);
+		supertest.delete('/api/s/user').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 });
 
 describe('Places Sample Test - ', function () {
-	afterEach(function() {
-		passportStub.logout(); // logout after each test
-	});
 	it('Register a new user1 - Return a 200', function(done) {
-		request(app).post('/register').send(user1).end( function(err, result) {
+		user1.username = 'userTwo'+(new Date).getTime();
+		user1.email = 'jimmy2'+(new Date).getTime()+'@jimmy.com';
+		supertest.post('/api/user').send(user1).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			userId1 = result.body.id;
+			user1.token = result.body.token;
 			done();
 		});
 	});
 	it('Make a new sample place - 1', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData1).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData1).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData1Id = result.body.res._id;
@@ -345,8 +334,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 2', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData2).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData2).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData2Id = result.body.res._id;
@@ -355,8 +343,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 3', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData3).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData3).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData3Id = result.body.res._id;
@@ -365,8 +352,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 4', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData4).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData4).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData4Id = result.body.res._id;
@@ -375,8 +361,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 5', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData5).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData5).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData5Id = result.body.res._id;
@@ -385,8 +370,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 6', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData6).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData6).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData6Id = result.body.res._id;
@@ -395,8 +379,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 7', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData7).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData7).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData7Id = result.body.res._id;
@@ -405,8 +388,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 8', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData8).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData8).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData8Id = result.body.res._id;
@@ -415,8 +397,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 9', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData9).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData9).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData9Id = result.body.res._id;
@@ -425,8 +406,7 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Make a new sample place - 10', function(done) {
 		user1.id = userId1;
-		passportStub.login(user1); // login as user
-		request(app).post('/addPlace').send(sampleData10).end( function(err, result) {
+		supertest.post('/api/s/addPlace').send(sampleData10).set('Authorization', 'Bearer ' + user1.token).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			sampleData10Id = result.body.res._id;
@@ -434,7 +414,7 @@ describe('Places Sample Test - ', function () {
 		});
 	});
 	it('Did we make all of the sample data?', function(done) {
-		request(app).get('/getAllPlace').end( function(err, result) {
+		supertest.get('/api/getAllPlace').end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			//expect(result.body.res.length).to.be(10);
@@ -442,7 +422,7 @@ describe('Places Sample Test - ', function () {
 		});
 	});
 	it('Get some Locations', function(done) {
-		request(app).get('/getPlaceByLocation').send(locData).end( function(err, result) {
+		supertest.get('/api/getPlaceByLocation').send(locData).end( function(err, result) {
 			expect(result.res.statusCode).to.be(200);
 			expect(result.body.success).to.be(true);
 			//expect(result.body.res.length).to.be(6);
@@ -451,57 +431,46 @@ describe('Places Sample Test - ', function () {
 	});
 	it('Delete that sample place - 1', function(done) {
 		var data = {'id':sampleData1Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 2', function(done) {
 		var data = {'id':sampleData2Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 3', function(done) {
 		var data = {'id':sampleData3Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 4', function(done) {
 		var data = {'id':sampleData4Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 5', function(done) {
 		var data = {'id':sampleData5Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 6', function(done) {
 		var data = {'id':sampleData6Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 7', function(done) {
 		var data = {'id':sampleData7Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 8', function(done) {
 		var data = {'id':sampleData8Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 9', function(done) {
 		var data = {'id':sampleData9Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('Delete that sample place - 10', function(done) {
 		var data = {'id':sampleData10Id};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deletePlace').send(data).expect(200, done);
+		supertest.delete('/api/s/deletePlace').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 	it('delete the user1 we made - Return a 200', function(done) {
 		var data = {'id':userId1};
-		passportStub.login(admin); // login as admin
-		request(app).post('/deleteUser').send(data).expect(200, done);
+		supertest.delete('/api/s/user').send(data).set('Authorization', 'Bearer ' + admin.token).expect(200, done);
 	});
 });

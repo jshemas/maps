@@ -60,19 +60,19 @@ var PlaceSchema = new mongoose.Schema({
 var Place = mongoose.model('Place', PlaceSchema);
 
 module.exports = {
-	addPlace: function(name, long, lat, author, description, category, callback) {
+	addPlace: function (name, long, lat, author, description, category, callback) {
 		var place = new Place({
 			name: name,
 			category: category,
 			description: description,
 			location: {
-				coordinates: [long,lat]
+				coordinates: [long, lat]
 			},
 			author: author
 		});
 		place.location.type = 'Point';
-		place.save( function(err, result){
-			if(err){
+		place.save( function (err, result) {
+			if (err) {
 				winston.info('Error in addPlace:'+err);
 				callback('DB-err-addPlace',null);
 			} else {
@@ -195,8 +195,9 @@ module.exports = {
 					} else {
 						if(result._id) {
 							callback(null, result);
+						} else {
+							callback(null, null);
 						}
-						callback(null, null);
 					}
 				});
 			} else {
@@ -265,8 +266,9 @@ module.exports = {
 					} else {
 						if(result._id) {
 							callback(null, result);
+						} else {
+							callback(null, null);
 						}
-						callback(null, null);
 					}
 				});
 			} else {
@@ -289,15 +291,16 @@ module.exports = {
 				callback(err, null);
 			} else {
 				if(result === 1){
-					that.updateTotalOverAllRating(placeId, function(err, result) {
+					that.updateTotalOverAllRating(placeId, function(err, updateResult) {
 						if(err){
 							winston.info('Error in editRate2:'+err);
 							callback(err, null);
 						} else {
-							if(result === true) {
+							if(updateResult === true){
 								callback(null, true);
+							} else {
+								callback(null, null);
 							}
-							callback(null, null);
 						}
 					});
 				} else {
@@ -325,8 +328,9 @@ module.exports = {
 						} else {
 							if(result === true) {
 								callback(null, true);
+							} else {
+								callback(null, null);
 							}
-							callback(null, null);
 						}
 					});
 				} else {
