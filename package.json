@@ -4,13 +4,13 @@
   "homepage": "http://www.localhost.com",
   "version": "0.1.0",
   "dependencies": {
-    "express": "4.5.1",
+    "express": "4.16.0",
     "body-parser": "1.5.0",
-    "method-override": "2.1.2",
-    "errorhandler" : "1.1.1",
+    "method-override": "2.3.10",
+    "errorhandler": "1.1.1",
     "compression": "1.0.9",
     "ect": "0.5.9",
-    "mongoose": "3.8.15",
+    "mongoose": "4.11.14",
     "passport": "0.2.0",
     "passport-local": "1.0.0",
     "express-jwt": "0.3.1",
@@ -28,7 +28,7 @@
     "grunt-contrib-uglify": "0.4.1",
     "grunt-contrib-watch": "0.6.1",
     "grunt-express-server": "0.4.17",
-    "grunt-mocha-test": "0.11.0",
+    "grunt-mocha-test": "0.12.0",
     "grunt-protractor-runner": "1.1.0"
   },
   "repository": {
